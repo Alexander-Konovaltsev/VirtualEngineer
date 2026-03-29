@@ -39,5 +39,14 @@ namespace VirtualEngineer.UI
                 menu.SetActive(false);
             }
         }
+
+        public void ClickedExitBtn()
+        {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
+        }
     }
 }
