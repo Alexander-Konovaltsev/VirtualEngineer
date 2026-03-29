@@ -2,6 +2,7 @@ namespace VirtualEngineer.Enums
 {
     public enum Menu
     {
-        StartMenu
+        StartMenu,
+        AboutMenu
     }
 }

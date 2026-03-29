@@ -48,5 +48,15 @@ namespace VirtualEngineer.UI
                 Application.Quit();
             #endif
         }
+
+        public void ClickedAboutBtn()
+        {
+            ShowMenu(Menu.AboutMenu);
+        }
+
+        public void ClickedBackToStartMenuBtn()
+        {
+            ShowMenu(Menu.StartMenu);
+        }
     }
 }
