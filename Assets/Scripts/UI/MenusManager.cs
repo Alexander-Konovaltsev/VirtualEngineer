@@ -13,7 +13,7 @@ namespace VirtualEngineer.UI
         private void Start()
         {
             GetAllMenus();
-            ShowMenu(Menu.StartMenu);
+            ShowStartMenu();
         }
 
         private void GetAllMenus()
@@ -49,14 +49,43 @@ namespace VirtualEngineer.UI
             #endif
         }
 
-        public void ClickedAboutBtn()
+        public void ShowStartMenu()
         {
+            ResizeMenu(Menu.StartMenu);
+            ShowMenu(Menu.StartMenu);
+        }
+
+        public void ShowAboutMenu()
+        {
+            ResizeMenu(Menu.AboutMenu);
             ShowMenu(Menu.AboutMenu);
         }
 
-        public void ClickedBackToStartMenuBtn()
+        public void ShowAuthorizationMenu()
         {
-            ShowMenu(Menu.StartMenu);
+            ResizeMenu(Menu.AuthorizationMenu);
+            ShowMenu(Menu.AuthorizationMenu);
+        }
+
+        public void ShowRegistrationMenu()
+        {
+            ResizeMenu(Menu.RegistrationMenu, height: 173);
+            ShowMenu(Menu.RegistrationMenu);
+        }
+
+        private void ResizeMenu(Menu menu, int width=100, int height=100)
+        {
+            RectTransform canvasRect = GetComponent<RectTransform>();
+            canvasRect.sizeDelta = new Vector2(width, height);
+
+            Transform menuTransform = allMenus[menu].transform;
+            if (menuTransform == null) return;
+
+            Transform menuContainerTransform = menuTransform.Find("MainContainer");
+            if (menuContainerTransform == null) return;
+
+            RectTransform menuContainerRect = menuContainerTransform.GetComponent<RectTransform>();
+            menuContainerRect.sizeDelta = new Vector2(width, height);
         }
     }
 }

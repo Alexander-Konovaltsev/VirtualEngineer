@@ -3,6 +3,8 @@ namespace VirtualEngineer.Enums
     public enum Menu
     {
         StartMenu,
-        AboutMenu
+        AboutMenu,
+        AuthorizationMenu,
+        RegistrationMenu
     }
 }
