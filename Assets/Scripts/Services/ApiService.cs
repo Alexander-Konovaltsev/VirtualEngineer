@@ -8,7 +8,8 @@ namespace VirtualEngineer.Services
 {
     public static class ApiService
     {
-        public const string BaseUrl = "http://127.0.0.1:8080";
+        private const string BaseUrl = "http://127.0.0.1:8080";
+        private const int TimeoutTime = 5;
         
         public static async Task<Role[]> GetRoles()
         {
@@ -17,9 +18,18 @@ namespace VirtualEngineer.Services
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
                 var operation = request.SendWebRequest();
+                float startTime = UnityEngine.Time.time;
 
                 while (!operation.isDone)
+                {
+                    if (IsTimeout(startTime))
+                    {
+                        request.Abort();
+                        return null;
+                    }
+
                     await Task.Yield();
+                }
 
                 if (request.result == UnityWebRequest.Result.Success)
                 {
@@ -28,6 +38,11 @@ namespace VirtualEngineer.Services
 
                 return null;
             }
+        }
+
+        private static bool IsTimeout(float startTime)
+        {
+            return UnityEngine.Time.time - startTime > TimeoutTime;
         }
     }
 }

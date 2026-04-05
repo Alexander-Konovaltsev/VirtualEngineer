@@ -3,12 +3,13 @@ using TMPro;
 
 namespace VirtualEngineer.UI
 {
-    public class Dropdown
+    public class MyDropdown
     {
         private TMP_Dropdown dropdown;
+        public TMP_Dropdown Dropdown => dropdown;
         private List<string> options;
 
-        public Dropdown(TMP_Dropdown dropdown)
+        public MyDropdown(TMP_Dropdown dropdown)
         {
             this.dropdown = dropdown;
         }

@@ -57,18 +57,21 @@ namespace VirtualEngineer.UI
 
         public void ShowAboutMenu()
         {
+            MenusCleaner.ClearMenu(Menu.AboutMenu, allMenus[Menu.AboutMenu]);
             ResizeMenu(Menu.AboutMenu);
             ShowMenu(Menu.AboutMenu);
         }
 
         public void ShowAuthorizationMenu()
         {
+            MenusCleaner.ClearMenu(Menu.AuthorizationMenu, allMenus[Menu.AuthorizationMenu]);
             ResizeMenu(Menu.AuthorizationMenu);
             ShowMenu(Menu.AuthorizationMenu);
         }
 
         public void ShowRegistrationMenu()
         {
+            MenusCleaner.ClearMenu(Menu.RegistrationMenu, allMenus[Menu.RegistrationMenu]);
             ResizeMenu(Menu.RegistrationMenu, height: 173);
             ShowMenu(Menu.RegistrationMenu);
         }
