@@ -2,12 +2,14 @@ using UnityEngine;
 using VirtualEngineer.Models;
 using VirtualEngineer.Services;
 using VirtualEngineer.UI;
+using VirtualEngineer.Validation;
+using VirtualEngineer.Validation.Rules;
+using VirtualEngineer.Helpers;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Data;
-using System.IO;
 
 namespace VirtualEngineer.Controllers
 {
@@ -16,11 +18,48 @@ namespace VirtualEngineer.Controllers
         private MyDropdown rolesDropdown;
         private Button regBtn;
 
+        private InputValidator lastNameInputValidator;
+        private InputValidator firstNameInputValidator;
+        private InputValidator emailInputValidator;
+        private InputValidator passwordInputValidator;
+        private InputValidator workplaceInputValidator;
+
         private string pathToInputContainer = "MainContainer/ContainerInput/";
         private string pathToRegBtn = "MainContainer/ContainerBtn/ContainerRegBtn/RegBtn";
 
         private void Awake()
         {
+            lastNameInputValidator = new InputValidator(
+                transform.Find(pathToInputContainer + "LastNameInput").GetComponent<TMP_InputField>(),
+                transform.Find(pathToInputContainer + "LastNameValidationText").GetComponent<TMP_Text>()
+            );
+            lastNameInputValidator.AddRule(new RequiredValidator("Фамилия"));
+
+            firstNameInputValidator = new InputValidator(
+                transform.Find(pathToInputContainer + "FirstNameInput").GetComponent<TMP_InputField>(),
+                transform.Find(pathToInputContainer + "FirstNameValidationText").GetComponent<TMP_Text>()
+            );
+            firstNameInputValidator.AddRule(new RequiredValidator("Имя"));
+
+            emailInputValidator = new InputValidator(
+                transform.Find(pathToInputContainer + "EmailInput").GetComponent<TMP_InputField>(),
+                transform.Find(pathToInputContainer + "EmailValidationText").GetComponent<TMP_Text>()
+            );
+            emailInputValidator.AddRule(new RequiredValidator("Email"));
+            emailInputValidator.AddRule(new EmailValidator());
+
+            passwordInputValidator = new InputValidator(
+                transform.Find(pathToInputContainer + "PasswordInput").GetComponent<TMP_InputField>(),
+                transform.Find(pathToInputContainer + "PasswordValidationText").GetComponent<TMP_Text>()
+            );
+            passwordInputValidator.AddRule(new RequiredValidator("Пароль"));
+
+            workplaceInputValidator = new InputValidator(
+                transform.Find(pathToInputContainer + "WorkPlaceInput").GetComponent<TMP_InputField>(),
+                transform.Find(pathToInputContainer + "WorkPlaceValidationText").GetComponent<TMP_Text>()
+            );
+            workplaceInputValidator.AddRule(new RequiredValidator("Место работы"));
+
             rolesDropdown = new MyDropdown(transform.Find(pathToInputContainer + "RolesDropdown").GetComponent<TMP_Dropdown>());
             regBtn = transform.Find(pathToRegBtn).GetComponent<Button>();
         }
@@ -36,7 +75,10 @@ namespace VirtualEngineer.Controllers
             if (roles == null)
             {
                 rolesDropdown.SetOptions(new List<string> {"Ошибка"});
-                SetValidationText("WorkPlaceValidationText", "Проверьте подключение к интернету");
+                BaseHelper.SetText(
+                    transform.Find(pathToInputContainer + "WorkPlaceValidationText").GetComponent<TMP_Text>(), 
+                    "Проверьте подключение к интернету");
+                
                 return;
             }
 
@@ -45,11 +87,19 @@ namespace VirtualEngineer.Controllers
             rolesDropdown.Dropdown.interactable = true;
         }
 
-        private void SetValidationText(string validationName, string validationText)
+        public void RegistrationAction()
         {
-            TMP_Text validation = transform.Find(pathToInputContainer + validationName).GetComponent<TMP_Text>();
-            validation.text = validationText;
-            validation.gameObject.SetActive(true);
+            bool isValidForm =
+                lastNameInputValidator.Validate() &
+                firstNameInputValidator.Validate() &
+                emailInputValidator.Validate() &
+                passwordInputValidator.Validate() &
+                workplaceInputValidator.Validate();
+
+            if (isValidForm)
+            {
+                Debug.Log("Форма валидна");
+            }
         }
     }
 }

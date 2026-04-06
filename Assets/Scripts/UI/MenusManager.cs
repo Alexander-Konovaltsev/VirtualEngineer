@@ -72,7 +72,7 @@ namespace VirtualEngineer.UI
         public void ShowRegistrationMenu()
         {
             MenusCleaner.ClearMenu(Menu.RegistrationMenu, allMenus[Menu.RegistrationMenu]);
-            ResizeMenu(Menu.RegistrationMenu, height: 173);
+            ResizeMenu(Menu.RegistrationMenu, width: 110, height: 173);
             ShowMenu(Menu.RegistrationMenu);
         }
 
