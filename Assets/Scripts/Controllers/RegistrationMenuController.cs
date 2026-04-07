@@ -5,11 +5,14 @@ using VirtualEngineer.UI;
 using VirtualEngineer.Validation;
 using VirtualEngineer.Validation.Rules;
 using VirtualEngineer.Helpers;
+using VirtualEngineer.Enums;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Data;
+using Unity.VisualScripting;
+using System.Threading.Tasks;
 
 namespace VirtualEngineer.Controllers
 {
@@ -17,6 +20,7 @@ namespace VirtualEngineer.Controllers
     {
         private MyDropdown rolesDropdown;
         private Button regBtn;
+        private Role[] roles;
 
         private InputValidator lastNameInputValidator;
         private InputValidator firstNameInputValidator;
@@ -62,6 +66,8 @@ namespace VirtualEngineer.Controllers
 
             rolesDropdown = new MyDropdown(transform.Find(pathToInputContainer + "RolesDropdown").GetComponent<TMP_Dropdown>());
             regBtn = transform.Find(pathToRegBtn).GetComponent<Button>();
+
+            regBtn.GetComponentInChildren<TMP_Text>().text = "Зарегистрироваться";
         }
 
         private async void OnEnable()
@@ -70,14 +76,15 @@ namespace VirtualEngineer.Controllers
             rolesDropdown.SetOptions(new List<string> {"Загрузка..."});
             rolesDropdown.Dropdown.interactable = false;
 
-            Role[] roles = await ApiService.GetRoles();
+            roles = await ApiService.GetRoles();
 
             if (roles == null)
             {
                 rolesDropdown.SetOptions(new List<string> {"Ошибка"});
                 BaseHelper.SetText(
-                    transform.Find(pathToInputContainer + "WorkPlaceValidationText").GetComponent<TMP_Text>(), 
-                    "Проверьте подключение к интернету");
+                    workplaceInputValidator.ErrorText, 
+                    "Проверьте подключение к интернету"
+                );
                 
                 return;
             }
@@ -87,7 +94,7 @@ namespace VirtualEngineer.Controllers
             rolesDropdown.Dropdown.interactable = true;
         }
 
-        public void RegistrationAction()
+        public async void RegistrationAction()
         {
             bool isValidForm =
                 lastNameInputValidator.Validate() &
@@ -96,9 +103,45 @@ namespace VirtualEngineer.Controllers
                 passwordInputValidator.Validate() &
                 workplaceInputValidator.Validate();
 
-            if (isValidForm)
+            if (!isValidForm) return;
+
+            UserCreateRequest user = new UserCreateRequest
             {
-                Debug.Log("Форма валидна");
+                last_name = lastNameInputValidator.InputField.text.Trim(),
+                first_name = firstNameInputValidator.InputField.text.Trim(),
+                patronymic = transform.Find(pathToInputContainer + "PatronymicInput").GetComponent<TMP_InputField>().text.Trim(),
+                email = emailInputValidator.InputField.text.Trim(),
+                password = passwordInputValidator.InputField.text,
+                role_id = roles.First(r => r.name == rolesDropdown.GetSelectOption()).id,
+                workplace = workplaceInputValidator.InputField.text.Trim(),
+            };
+
+            TMP_Text regBtnText = regBtn.GetComponentInChildren<TMP_Text>();
+            // regBtn.interactable = false;
+            regBtnText.text = "Обработка...";
+            
+            UserCreateResult createResult = await ApiService.CreateUser(user);
+            Debug.Log((int)createResult);
+            switch (createResult)
+            {
+                case UserCreateResult.Success:
+                    regBtnText.text = "Успешно";
+                    break;
+                case UserCreateResult.EmailAlreadyExists:
+                    regBtnText.text = "Зарегистрироваться";
+                    regBtn.interactable = true;
+                    BaseHelper.SetText(
+                        emailInputValidator.ErrorText, 
+                        "Email уже используется"
+                    );
+                    break;
+                default:
+                    regBtnText.text = "Ошибка";
+                    BaseHelper.SetText(
+                        workplaceInputValidator.ErrorText, 
+                        "Проверьте подключение к интернету"
+                    );
+                    break;
             }
         }
     }

@@ -3,10 +3,11 @@ using VirtualEngineer.Enums;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace VirtualEngineer.Services
 {
-    public static class ApiService
+    public class ApiService
     {
         private const string BaseUrl = "http://127.0.0.1:8080";
         private const int TimeoutTime = 5;
@@ -18,7 +19,7 @@ namespace VirtualEngineer.Services
             using (UnityWebRequest request = UnityWebRequest.Get(url))
             {
                 var operation = request.SendWebRequest();
-                float startTime = UnityEngine.Time.time;
+                float startTime = Time.time;
 
                 while (!operation.isDone)
                 {
@@ -40,9 +41,50 @@ namespace VirtualEngineer.Services
             }
         }
 
+        public static async Task<UserCreateResult> CreateUser(UserCreateRequest user)
+        {
+            string url = BaseUrl + Endpoint.UserCreate;
+
+            string json = JsonConvert.SerializeObject(user);
+
+            using (UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json"))
+            {
+                request.downloadHandler = new DownloadHandlerBuffer();
+    
+                var operation = request.SendWebRequest();
+                float startTime = Time.time;
+
+                while (!operation.isDone)
+                {
+                    Debug.Log("WAITING...");
+                    if (IsTimeout(startTime))
+                    {
+                        request.Abort();
+                        return UserCreateResult.TimeoutError;
+                    }
+
+                    await Task.Yield();
+                }
+                Debug.Log("EXIT...");
+                long status = request.responseCode;
+
+                if (status == 201)
+                {
+                    return UserCreateResult.Success;
+                }
+
+                if (status == 409)
+                {
+                    return UserCreateResult.EmailAlreadyExists;
+                }
+
+                return UserCreateResult.NetworkError;
+            }
+        }
+
         private static bool IsTimeout(float startTime)
         {
-            return UnityEngine.Time.time - startTime > TimeoutTime;
+            return Time.time - startTime > TimeoutTime;
         }
     }
 }

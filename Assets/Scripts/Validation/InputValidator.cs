@@ -8,6 +8,9 @@ namespace VirtualEngineer.Validation
         private TMP_InputField inputField;
         private TMP_Text errorText;
 
+        public TMP_InputField InputField => inputField;
+        public TMP_Text ErrorText => errorText;
+
         private List<IValidator> rules = new List<IValidator>();
 
         public InputValidator(TMP_InputField inputField, TMP_Text errorText)
