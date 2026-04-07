@@ -1,90 +1,63 @@
 using VirtualEngineer.Models;
 using VirtualEngineer.Enums;
 using System.Threading.Tasks;
-using UnityEngine.Networking;
+using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace VirtualEngineer.Services
 {
     public class ApiService
     {
         private const string BaseUrl = "http://127.0.0.1:8080";
-        private const int TimeoutTime = 5;
-        
+
         public static async Task<Role[]> GetRoles()
         {
-            string url = BaseUrl + Endpoint.Roles;
+            using var client = new HttpClient();
 
-            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            try
             {
-                var operation = request.SendWebRequest();
-                float startTime = Time.time;
+                var response = await client.GetAsync(BaseUrl + Endpoint.Roles);
 
-                while (!operation.isDone)
-                {
-                    if (IsTimeout(startTime))
-                    {
-                        request.Abort();
-                        return null;
-                    }
+                if (!response.IsSuccessStatusCode)
+                    return null;
 
-                    await Task.Yield();
-                }
-
-                if (request.result == UnityWebRequest.Result.Success)
-                {
-                    return JsonConvert.DeserializeObject<Role[]>(request.downloadHandler.text);
-                }
-
+                string json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Role[]>(json);
+            }
+            catch
+            {
                 return null;
             }
         }
-
+        
         public static async Task<UserCreateResult> CreateUser(UserCreateRequest user)
         {
-            string url = BaseUrl + Endpoint.UserCreate;
+            using var client = new HttpClient();
 
             string json = JsonConvert.SerializeObject(user);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            using (UnityWebRequest request = UnityWebRequest.Post(url, json, "application/json"))
+            try
             {
-                request.downloadHandler = new DownloadHandlerBuffer();
-    
-                var operation = request.SendWebRequest();
-                float startTime = Time.time;
+                var response = await client.PostAsync(BaseUrl + Endpoint.UserCreate, content);
 
-                while (!operation.isDone)
-                {
-                    Debug.Log("WAITING...");
-                    if (IsTimeout(startTime))
-                    {
-                        request.Abort();
-                        return UserCreateResult.TimeoutError;
-                    }
-
-                    await Task.Yield();
-                }
-                Debug.Log("EXIT...");
-                long status = request.responseCode;
-
-                if (status == 201)
-                {
+                if (response.StatusCode == System.Net.HttpStatusCode.Created)
                     return UserCreateResult.Success;
-                }
 
-                if (status == 409)
-                {
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                     return UserCreateResult.EmailAlreadyExists;
-                }
 
                 return UserCreateResult.NetworkError;
             }
-        }
-
-        private static bool IsTimeout(float startTime)
-        {
-            return Time.time - startTime > TimeoutTime;
+            catch (TaskCanceledException)
+            {
+                return UserCreateResult.TimeoutError;
+            }
+            catch
+            {
+                return UserCreateResult.NetworkError;
+            }
         }
     }
 }

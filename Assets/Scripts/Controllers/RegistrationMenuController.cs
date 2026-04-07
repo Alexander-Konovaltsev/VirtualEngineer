@@ -11,8 +11,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Data;
-using Unity.VisualScripting;
-using System.Threading.Tasks;
 
 namespace VirtualEngineer.Controllers
 {
@@ -66,12 +64,11 @@ namespace VirtualEngineer.Controllers
 
             rolesDropdown = new MyDropdown(transform.Find(pathToInputContainer + "RolesDropdown").GetComponent<TMP_Dropdown>());
             regBtn = transform.Find(pathToRegBtn).GetComponent<Button>();
-
-            regBtn.GetComponentInChildren<TMP_Text>().text = "Зарегистрироваться";
         }
 
         private async void OnEnable()
         {
+            regBtn.GetComponentInChildren<TMP_Text>().text = "Зарегистрироваться";
             regBtn.interactable = false;
             rolesDropdown.SetOptions(new List<string> {"Загрузка..."});
             rolesDropdown.Dropdown.interactable = false;
@@ -117,11 +114,11 @@ namespace VirtualEngineer.Controllers
             };
 
             TMP_Text regBtnText = regBtn.GetComponentInChildren<TMP_Text>();
-            // regBtn.interactable = false;
+            regBtn.interactable = false;
             regBtnText.text = "Обработка...";
             
             UserCreateResult createResult = await ApiService.CreateUser(user);
-            Debug.Log((int)createResult);
+            
             switch (createResult)
             {
                 case UserCreateResult.Success:
