@@ -700,7 +700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -67.5}
+  m_AnchoredPosition: {x: 55, y: -67.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &86454425
@@ -1224,7 +1224,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -67
+  m_Spacing: -70
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -1489,7 +1489,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -30}
+  m_AnchoredPosition: {x: 55, y: -30}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &266190989
@@ -3091,7 +3091,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -97.5}
+  m_AnchoredPosition: {x: 55, y: -97.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &510682831
@@ -3323,7 +3323,7 @@ MonoBehaviour:
     m_Top: 5
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -75
+  m_Spacing: -70
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -3521,7 +3521,7 @@ MonoBehaviour:
     m_Top: 2
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -84
+  m_Spacing: -85
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -4264,7 +4264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -7.5}
+  m_AnchoredPosition: {x: 55, y: -7.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &683872535
@@ -5406,7 +5406,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -125}
+  m_AnchoredPosition: {x: 55, y: -125}
   m_SizeDelta: {x: 110, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &870085827
@@ -7454,8 +7454,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -63.33334}
-  m_SizeDelta: {x: 83, y: 8}
+  m_AnchoredPosition: {x: 50, y: -64.33334}
+  m_SizeDelta: {x: 83, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1006724494
 MonoBehaviour:
@@ -7852,7 +7852,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -73}
+  m_AnchoredPosition: {x: 55, y: -73}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1052331906
@@ -8171,7 +8171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -37.5}
+  m_AnchoredPosition: {x: 55, y: -37.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1133166336
@@ -8419,7 +8419,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -22.5}
+  m_AnchoredPosition: {x: 55, y: -22.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1243332557
@@ -8919,7 +8919,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -82.5}
+  m_AnchoredPosition: {x: 55, y: -82.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1411938565
@@ -9473,7 +9473,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: -50
+  m_Spacing: -54
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -9841,7 +9841,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -65}
+  m_AnchoredPosition: {x: 55, y: -65}
   m_SizeDelta: {x: 110, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1533824633
@@ -10294,7 +10294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -52.5}
+  m_AnchoredPosition: {x: 55, y: -52.5}
   m_SizeDelta: {x: 96, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1587870621
@@ -10706,7 +10706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 73, y: -51}
+  m_AnchoredPosition: {x: 78, y: -51}
   m_SizeDelta: {x: 40, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684509968
@@ -11728,7 +11728,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1745659666}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2001401308}
+        m_TargetAssemblyTypeName: VirtualEngineer.Controllers.AuthorizationMenuController,
+          Assembly-CSharp
+        m_MethodName: AuthorizationAction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1745659666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12149,7 +12162,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -47.625}
+  m_AnchoredPosition: {x: 50, y: -50.25}
   m_SizeDelta: {x: 83, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1920758253
@@ -12566,6 +12579,7 @@ GameObject:
   - component: {fileID: 2001401305}
   - component: {fileID: 2001401307}
   - component: {fileID: 2001401306}
+  - component: {fileID: 2001401308}
   m_Layer: 0
   m_Name: AuthorizationMenu
   m_TagString: Untagged
@@ -12631,6 +12645,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001401304}
   m_CullTransparentMesh: 1
+--- !u!114 &2001401308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001401304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: addfbada1959760478137c5c0cad65f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VirtualEngineer.Controllers.AuthorizationMenuController
 --- !u!1 &2007390954
 GameObject:
   m_ObjectHideFlags: 0
@@ -12937,7 +12963,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -87}
+  m_AnchoredPosition: {x: 55, y: -87}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2077152468

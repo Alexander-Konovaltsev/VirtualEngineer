@@ -65,7 +65,7 @@ namespace VirtualEngineer.UI
         public void ShowAuthorizationMenu()
         {
             MenusCleaner.ClearMenu(Menu.AuthorizationMenu, allMenus[Menu.AuthorizationMenu]);
-            ResizeMenu(Menu.AuthorizationMenu);
+            ResizeMenu(Menu.AuthorizationMenu, height: 107);
             ShowMenu(Menu.AuthorizationMenu);
         }
 

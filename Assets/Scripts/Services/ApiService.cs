@@ -62,5 +62,41 @@ namespace VirtualEngineer.Services
                 return UserCreateResult.NetworkError;
             }
         }
+
+        public static async Task<UserAuthorizationResult> AuthorizationUser(UserAuthorizationRequest auth)
+        {
+            using var client = new HttpClient();
+
+            string json = JsonConvert.SerializeObject(auth);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(BaseUrl + Endpoint.UserAuthorization, content);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    string responseJson = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<UserAuthorizationResponse>(responseJson);
+
+                    SessionService.SetToken(data.access_token);
+
+                    return UserAuthorizationResult.Success;
+                }
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return UserAuthorizationResult.InvalidCredentials;
+
+                return UserAuthorizationResult.NetworkError;
+            }
+            catch (TaskCanceledException)
+            {
+                return UserAuthorizationResult.TimeoutError;
+            }
+            catch
+            {
+                return UserAuthorizationResult.NetworkError;
+            }
+        }
     }
 }
