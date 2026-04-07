@@ -1,4 +1,3 @@
-using UnityEngine;
 using VirtualEngineer.Models;
 using VirtualEngineer.Services;
 using VirtualEngineer.UI;
@@ -14,7 +13,7 @@ using System.Data;
 
 namespace VirtualEngineer.Controllers
 {
-    public class RegistrationMenuController : MonoBehaviour
+    public class RegistrationMenuController : BaseMenuController
     {
         private MyDropdown rolesDropdown;
         private Button regBtn;
@@ -25,9 +24,6 @@ namespace VirtualEngineer.Controllers
         private InputValidator emailInputValidator;
         private InputValidator passwordInputValidator;
         private InputValidator workplaceInputValidator;
-
-        private string pathToInputContainer = "MainContainer/ContainerInput/";
-        private string pathToRegBtn = "MainContainer/ContainerBtn/ContainerRegBtn/RegBtn";
 
         private void Awake()
         {
@@ -63,7 +59,7 @@ namespace VirtualEngineer.Controllers
             workplaceInputValidator.AddRule(new RequiredValidator("Место работы"));
 
             rolesDropdown = new MyDropdown(transform.Find(pathToInputContainer + "RolesDropdown").GetComponent<TMP_Dropdown>());
-            regBtn = transform.Find(pathToRegBtn).GetComponent<Button>();
+            regBtn = transform.Find(pathToBtnContainer + "ContainerRegBtn/RegBtn").GetComponent<Button>();
         }
 
         private async void OnEnable()
@@ -130,6 +126,14 @@ namespace VirtualEngineer.Controllers
                     BaseHelper.SetText(
                         emailInputValidator.ErrorText, 
                         "Email уже используется"
+                    );
+                    break;
+                case UserCreateResult.DataError:
+                    regBtnText.text = "Зарегистрироваться";
+                    regBtn.interactable = true;
+                    BaseHelper.SetText(
+                        workplaceInputValidator.ErrorText, 
+                        "Проверьте корректность данных"
                     );
                     break;
                 default:

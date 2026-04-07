@@ -48,6 +48,9 @@ namespace VirtualEngineer.Services
                 if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                     return UserCreateResult.EmailAlreadyExists;
 
+                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                    return UserCreateResult.DataError;
+
                 return UserCreateResult.NetworkError;
             }
             catch (TaskCanceledException)

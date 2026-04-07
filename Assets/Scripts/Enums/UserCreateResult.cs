@@ -5,7 +5,8 @@ namespace VirtualEngineer.Enums
         Success,
         EmailAlreadyExists,
         TimeoutError,
-        NetworkError
+        NetworkError,
+        DataError
     }
 
 }
