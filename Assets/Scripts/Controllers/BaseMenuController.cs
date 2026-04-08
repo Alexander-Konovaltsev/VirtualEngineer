@@ -6,5 +6,6 @@ namespace VirtualEngineer.Controllers
     {
         protected string pathToInputContainer = "MainContainer/ContainerInput/";
         protected string pathToBtnContainer = "MainContainer/ContainerBtn/";
+        protected string pathToViewportInSceneCard = "MainContainer/TextBg/ScrollView/Viewport/";
     }
 }
