@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace VirtualEngineer.Services
 {
@@ -96,6 +97,27 @@ namespace VirtualEngineer.Services
             catch
             {
                 return UserAuthorizationResult.NetworkError;
+            }
+        }
+
+        public static async Task<Scene[]> GetScenes()
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionService.AccessToken);
+
+            try
+            {
+                var response = await client.GetAsync(BaseUrl + Endpoint.Scenes);
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                string json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Scene[]>(json);
+            }
+            catch
+            {
+                return null;
             }
         }
     }

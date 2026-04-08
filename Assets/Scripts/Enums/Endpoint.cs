@@ -5,5 +5,6 @@ namespace VirtualEngineer.Enums
         public const string Roles = "/roles";
         public const string UserCreate = "/users/create";
         public const string UserAuthorization = "/users/authorization";
+        public const string Scenes = "/scenes";
     }
 }
