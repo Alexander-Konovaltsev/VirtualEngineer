@@ -35,7 +35,7 @@ namespace VirtualEngineer.Controllers
             passwordInputValidator.AddRule(new RequiredValidator("Пароль"));
 
             authBtn = transform.Find(pathToBtnContainer + "ContainerAuthBtn/AuthBtn").GetComponent<Button>();
-            menusManager = GetComponentInParent<MenusManager>();
+            menusManager = GetMenusManager();
         }
 
         private void OnEnable()
@@ -67,7 +67,6 @@ namespace VirtualEngineer.Controllers
             switch (authorizationResult)
             {
                 case UserAuthorizationResult.Success:
-                    UnityEngine.Debug.Log(SessionService.AccessToken);
                     menusManager.ShowSelectSceneMenu();
                     break;
                 case UserAuthorizationResult.InvalidCredentials:

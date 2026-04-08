@@ -1,3 +1,4 @@
+using VirtualEngineer.UI;
 using UnityEngine;
 
 namespace VirtualEngineer.Controllers
@@ -7,5 +8,10 @@ namespace VirtualEngineer.Controllers
         protected string pathToInputContainer = "MainContainer/ContainerInput/";
         protected string pathToBtnContainer = "MainContainer/ContainerBtn/";
         protected string pathToViewportInSceneCard = "MainContainer/TextBg/ScrollView/Viewport/";
+
+        protected MenusManager GetMenusManager()
+        {
+            return GetComponentInParent<MenusManager>();
+        }
     }
 }
