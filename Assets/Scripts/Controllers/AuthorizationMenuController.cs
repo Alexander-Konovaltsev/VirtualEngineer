@@ -4,6 +4,7 @@ using VirtualEngineer.Models;
 using VirtualEngineer.Enums;
 using VirtualEngineer.Services;
 using VirtualEngineer.Helpers;
+using VirtualEngineer.UI;
 using TMPro;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ namespace VirtualEngineer.Controllers
         
         private InputValidator emailInputValidator;
         private InputValidator passwordInputValidator;
+
+        private MenusManager menusManager;
 
         private void Awake()
         {
@@ -32,6 +35,7 @@ namespace VirtualEngineer.Controllers
             passwordInputValidator.AddRule(new RequiredValidator("Пароль"));
 
             authBtn = transform.Find(pathToBtnContainer + "ContainerAuthBtn/AuthBtn").GetComponent<Button>();
+            menusManager = GetComponentInParent<MenusManager>();
         }
 
         private void OnEnable()
@@ -64,6 +68,7 @@ namespace VirtualEngineer.Controllers
             {
                 case UserAuthorizationResult.Success:
                     UnityEngine.Debug.Log(SessionService.AccessToken);
+                    menusManager.ShowSelectSceneMenu();
                     break;
                 case UserAuthorizationResult.InvalidCredentials:
                 authBtnText.text = "Войти";
