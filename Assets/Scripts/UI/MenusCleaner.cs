@@ -23,6 +23,9 @@ namespace VirtualEngineer.UI
                 case Menu.RegistrationMenu:
                     ClearRegistrationMenu(menuGO);
                     break;
+                case Menu.SelectSceneMenu:
+                    ClearSelectSceneMenu(menuGO);
+                    break;
             }
         }
 
@@ -59,6 +62,23 @@ namespace VirtualEngineer.UI
 
             TMP_Dropdown dropdown = dropdownTransform.GetComponent<TMP_Dropdown>();
             dropdown.ClearOptions();
+        }
+
+        private static void ClearSelectSceneMenu(GameObject selectSceneMenu)
+        {
+            Transform content = selectSceneMenu.transform.Find("MainContainer/TextBg/ScrollView/Viewport/Content");
+            if (content == null) return;
+
+            foreach (Transform sceneCard in content)
+            {
+                Object.Destroy(sceneCard.gameObject);
+            }
+
+            Transform scrollTransform = selectSceneMenu.transform.Find("MainContainer/TextBg/ScrollView");
+            if (scrollTransform == null) return;
+
+            ScrollRect scrollRect = scrollTransform.GetComponent<ScrollRect>();
+            scrollRect.horizontalNormalizedPosition = 0f;
         }
 
         private static void ClearMenuInputs(GameObject menu, string[] inputsNames)
