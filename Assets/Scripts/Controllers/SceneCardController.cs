@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VirtualEngineer.UI;
+using VirtualEngineer.Helpers;
+using UnityEngine.SceneManagement;
 
 namespace VirtualEngineer.Controllers
 {
@@ -16,16 +18,17 @@ namespace VirtualEngineer.Controllers
         private Button aboutBtn;
         [SerializeField]
         private Image image;
-        private Scene scene;
+        private Models.Scene scene;
         private MenusManager menusManager;
         private AboutSceneMenuController aboutScene;
 
         private void Awake()
         {
+            selectBtn.onClick.AddListener(OnSelectClicked);
             aboutBtn.onClick.AddListener(OnAboutClicked);
         }
 
-        public void Init(Scene scene, MenusManager menusManager, AboutSceneMenuController aboutScene)
+        public void Init(Models.Scene scene, MenusManager menusManager, AboutSceneMenuController aboutScene)
         {
             this.scene = scene;
             title.text = scene.title;
@@ -38,6 +41,11 @@ namespace VirtualEngineer.Controllers
         {
             aboutScene.Init(scene.title, scene.description, image.sprite);
             menusManager.ShowAboutSceneMenu();
+        }
+
+        private void OnSelectClicked()
+        {
+            SceneManager.LoadScene(BaseHelper.ConvertSnakeCaseToPascalCase(scene.name));
         }
     }
 }
