@@ -83,6 +83,13 @@ namespace VirtualEngineer.UI
             ShowMenu(Menu.SelectSceneMenu);
         }
 
+        public void ShowAboutSceneMenu()
+        {
+            MenusCleaner.ClearMenu(Menu.AboutSceneMenu, allMenus[Menu.AboutSceneMenu]);
+            ResizeMenu(Menu.AboutSceneMenu, width: 180, height: 130);
+            ShowMenu(Menu.AboutSceneMenu);
+        }
+
         private void ResizeMenu(Menu menu, int width=100, int height=100)
         {
             RectTransform canvasRect = GetComponent<RectTransform>();

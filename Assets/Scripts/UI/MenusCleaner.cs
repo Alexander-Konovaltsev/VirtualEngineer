@@ -26,12 +26,15 @@ namespace VirtualEngineer.UI
                 case Menu.SelectSceneMenu:
                     ClearSelectSceneMenu(menuGO);
                     break;
+                case Menu.AboutSceneMenu:
+                    ClearAboutSceneMenu(menuGO);
+                    break;
             }
         }
 
         private static void ClearAboutMenu(GameObject aboutMenu)
         {
-            Transform scrollTransform = aboutMenu.transform.Find("MainContainer/TextBg/Scroll View");
+            Transform scrollTransform = aboutMenu.transform.Find("MainContainer/TextBg/ScrollView");
             if (scrollTransform == null) return;
 
             ScrollRect scrollRect = scrollTransform.GetComponent<ScrollRect>();
@@ -79,6 +82,15 @@ namespace VirtualEngineer.UI
 
             ScrollRect scrollRect = scrollTransform.GetComponent<ScrollRect>();
             scrollRect.horizontalNormalizedPosition = 0f;
+        }
+
+        private static void ClearAboutSceneMenu(GameObject aboutSceneMenu)
+        {
+            Transform scrollTransform = aboutSceneMenu.transform.Find("MainContainer/HorizontalContainer/TextBg/ScrollView");
+            if (scrollTransform == null) return;
+
+            ScrollRect scrollRect = scrollTransform.GetComponent<ScrollRect>();
+            scrollRect.verticalNormalizedPosition = 1f;
         }
 
         private static void ClearMenuInputs(GameObject menu, string[] inputsNames)

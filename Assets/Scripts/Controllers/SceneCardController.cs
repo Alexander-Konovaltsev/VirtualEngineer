@@ -2,6 +2,7 @@ using VirtualEngineer.Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VirtualEngineer.UI;
 
 namespace VirtualEngineer.Controllers
 {
@@ -16,12 +17,27 @@ namespace VirtualEngineer.Controllers
         [SerializeField]
         private Image image;
         private Scene scene;
+        private MenusManager menusManager;
+        private AboutSceneMenuController aboutScene;
 
-        public void Init(Scene scene)
+        private void Awake()
+        {
+            aboutBtn.onClick.AddListener(OnAboutClicked);
+        }
+
+        public void Init(Scene scene, MenusManager menusManager, AboutSceneMenuController aboutScene)
         {
             this.scene = scene;
             title.text = scene.title;
             image.sprite = Resources.Load<Sprite>(scene.name + "/1");
+            this.menusManager = menusManager;
+            this.aboutScene = aboutScene;
+        }
+
+        private void OnAboutClicked()
+        {
+            aboutScene.Init(scene.title, scene.description, image.sprite);
+            menusManager.ShowAboutSceneMenu();
         }
     }
 }

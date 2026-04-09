@@ -6,6 +6,7 @@ namespace VirtualEngineer.Enums
         AboutMenu,
         AuthorizationMenu,
         RegistrationMenu,
-        SelectSceneMenu
+        SelectSceneMenu,
+        AboutSceneMenu
     }
 }
