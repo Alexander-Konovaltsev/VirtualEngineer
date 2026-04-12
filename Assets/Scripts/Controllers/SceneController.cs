@@ -2,7 +2,8 @@ using UnityEngine;
 using VirtualEngineer.Models;
 using VirtualEngineer.Services;
 using VirtualEngineer.Enums;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace VirtualEngineer.Controllers
 {
@@ -13,28 +14,45 @@ namespace VirtualEngineer.Controllers
 
         private async void Awake()
         {
-            Model[] models = await ApiService.GetAsyncPrivate<Model>(Endpoint.ModelsByScene(AppDataService.SelectedSceneId));
+            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene(AppDataService.SelectedSceneId));
+
+            Dictionary<int?, List<Model>> tree = BuildModelsTree(allModels.ToList());
+
+            RecursiveDescentModelsTree(tree, ConstCode.ModelWithoutParent, transform);
+        }
+        
+        private Dictionary<int?, List<Model>> BuildModelsTree(List<Model> models)
+        {
+            Dictionary<int?, List<Model>> tree = new Dictionary<int?, List<Model>>();
 
             foreach (Model model in models)
             {
-                await RecursiveDescentModels(model, transform);
-            }
-        }
-        
-        private async Task RecursiveDescentModels(Model model, Transform parentTransform)
-        {
-            Transform currentTransform = parentTransform.Find(model.name);
+                if (model.parent_id == null) model.parent_id = ConstCode.ModelWithoutParent;
+                
+                if (!tree.ContainsKey(model.parent_id))
+                    tree[model.parent_id] = new List<Model>();
 
-            if (currentTransform == null) 
+                tree[model.parent_id].Add(model);
+            }
+
+            return tree;
+        }
+
+        private void RecursiveDescentModelsTree(Dictionary<int?, List<Model>> tree, int? parentId, Transform parentTransform)
+        {
+            if (!tree.ContainsKey(parentId))
                 return;
 
-            SelectActions(model, currentTransform);
-
-            Model[] modelChildren = await ApiService.GetAsyncPrivate<Model>(Endpoint.ModelChildren(model.id)); 
-
-            foreach (Model modelChild in modelChildren)
+            foreach (Model model in tree[parentId])
             {
-                await RecursiveDescentModels(modelChild, currentTransform);
+                Transform currentTransform = parentTransform.Find(model.name);
+
+                if (currentTransform == null)
+                    continue;
+
+                SelectActions(model, currentTransform);
+
+                RecursiveDescentModelsTree(tree, model.id, currentTransform);
             }
         }
         

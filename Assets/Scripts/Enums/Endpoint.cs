@@ -10,6 +10,10 @@ namespace VirtualEngineer.Enums
         {
             return $"/scenes/{sceneId}/models";
         }
+        public static string AllModelsByScene(int sceneId)
+        {
+            return $"/scenes/{sceneId}/models/all";
+        }
         public static string ModelChildren(int modelId)
         {
             return $"/models/{modelId}/children";
