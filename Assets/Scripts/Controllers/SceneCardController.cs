@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using VirtualEngineer.UI;
 using VirtualEngineer.Helpers;
 using UnityEngine.SceneManagement;
+using VirtualEngineer.Services;
 
 namespace VirtualEngineer.Controllers
 {
@@ -45,7 +46,8 @@ namespace VirtualEngineer.Controllers
 
         private void OnSelectClicked()
         {
-            SceneManager.LoadScene(BaseHelper.ConvertSnakeCaseToPascalCase(scene.name));
+            AppDataService.SelectedSceneId = scene.id;
+            SceneManager.LoadScene(scene.name);
         }
     }
 }

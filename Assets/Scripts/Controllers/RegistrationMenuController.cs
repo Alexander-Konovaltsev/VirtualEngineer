@@ -69,7 +69,7 @@ namespace VirtualEngineer.Controllers
             rolesDropdown.SetOptions(new List<string> {"Загрузка..."});
             rolesDropdown.Dropdown.interactable = false;
 
-            roles = await ApiService.GetRoles();
+            roles = await ApiService.GetAsync<Role>(Endpoint.Roles);
 
             if (roles == null)
             {

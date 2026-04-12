@@ -3,6 +3,7 @@ using VirtualEngineer.Services;
 using VirtualEngineer.UI;
 using TMPro;
 using UnityEngine;
+using VirtualEngineer.Enums;
 
 namespace VirtualEngineer.Controllers
 {
@@ -28,7 +29,7 @@ namespace VirtualEngineer.Controllers
         {
             loadText.gameObject.SetActive(true);
 
-            scenes = await ApiService.GetScenes();
+            scenes = await ApiService.GetAsyncPrivate<Scene>(Endpoint.Scenes);
 
             if (scenes == null)
             {

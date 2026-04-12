@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Diagnostics;
+using UnityEngine;
+using System;
 
 namespace VirtualEngineer.Services
 {
@@ -12,19 +15,19 @@ namespace VirtualEngineer.Services
     {
         private const string BaseUrl = "http://127.0.0.1:8080";
 
-        public static async Task<Role[]> GetRoles()
+        public static async Task<T[]> GetAsync<T>(string endpoint)
         {
             using var client = new HttpClient();
 
             try
             {
-                var response = await client.GetAsync(BaseUrl + Endpoint.Roles);
+                var response = await client.GetAsync(BaseUrl + endpoint);
 
                 if (!response.IsSuccessStatusCode)
                     return null;
 
                 string json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Role[]>(json);
+                return JsonConvert.DeserializeObject<T[]>(json);
             }
             catch
             {
@@ -100,20 +103,20 @@ namespace VirtualEngineer.Services
             }
         }
 
-        public static async Task<Scene[]> GetScenes()
+        public static async Task<T[]> GetAsyncPrivate<T>(string endpoint)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionService.AccessToken);
 
             try
             {
-                var response = await client.GetAsync(BaseUrl + Endpoint.Scenes);
+                var response = await client.GetAsync(BaseUrl + endpoint);
 
                 if (!response.IsSuccessStatusCode)
                     return null;
 
                 string json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<Scene[]>(json);
+                return JsonConvert.DeserializeObject<T[]>(json);
             }
             catch
             {
