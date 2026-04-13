@@ -6,6 +6,7 @@ using VirtualEngineer.Enums;
 using VirtualEngineer.VR;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 namespace VirtualEngineer.Controllers
 {
@@ -16,7 +17,13 @@ namespace VirtualEngineer.Controllers
 
         private async void Awake()
         {
-            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene(AppDataService.SelectedSceneId));
+            if (AppDataService.SelectedSceneId == null)
+            {
+                SceneManager.LoadScene(ConstCode.StartMenuScene);
+                return;
+            }
+
+            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
 
             Dictionary<int?, List<Model>> tree = BuildModelsTree(allModels.ToList());
 

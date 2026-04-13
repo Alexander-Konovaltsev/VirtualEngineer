@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using VirtualEngineer.Enums;
 using UnityEngine;
 using System;
+using VirtualEngineer.Services;
 
 namespace VirtualEngineer.UI
 {
@@ -13,7 +14,11 @@ namespace VirtualEngineer.UI
         private void Start()
         {
             GetAllMenus();
-            ShowStartMenu();
+
+            if (AppDataService.SelectedSceneId == null)
+                ShowStartMenu();
+            else
+                ShowSelectSceneMenu();
         }
 
         private void GetAllMenus()
