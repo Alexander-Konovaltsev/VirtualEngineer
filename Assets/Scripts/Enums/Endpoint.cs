@@ -18,5 +18,9 @@ namespace VirtualEngineer.Enums
         {
             return $"/models/{modelId}/children";
         }
+        public static string AllViewedModelsByScene(int sceneId)
+        {
+            return $"/models-views/{sceneId}";
+        }
     }
 }

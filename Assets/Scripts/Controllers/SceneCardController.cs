@@ -6,6 +6,7 @@ using VirtualEngineer.UI;
 using VirtualEngineer.Helpers;
 using UnityEngine.SceneManagement;
 using VirtualEngineer.Services;
+using VirtualEngineer.Enums;
 
 namespace VirtualEngineer.Controllers
 {
@@ -13,6 +14,8 @@ namespace VirtualEngineer.Controllers
     {
         [SerializeField]
         private TMP_Text title;
+        [SerializeField]
+        private TMP_Text studyObjectsInfo;
         [SerializeField]
         private Button selectBtn;
         [SerializeField]
@@ -22,6 +25,8 @@ namespace VirtualEngineer.Controllers
         private Models.Scene scene;
         private MenusManager menusManager;
         private AboutSceneMenuController aboutScene;
+        private int objectsCount;
+        private int studyObjectsCount;
 
         private void Awake()
         {
@@ -36,6 +41,7 @@ namespace VirtualEngineer.Controllers
             image.sprite = Resources.Load<Sprite>(scene.name + "/1");
             this.menusManager = menusManager;
             this.aboutScene = aboutScene;
+            InitStudyObjectsInfo();
         }
 
         private void OnAboutClicked()
@@ -48,6 +54,20 @@ namespace VirtualEngineer.Controllers
         {
             AppDataService.SelectedSceneId = scene.id;
             SceneManager.LoadScene(scene.name);
+        }
+
+        private async void InitStudyObjectsInfo()
+        {
+            UserModelView[] userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>(Endpoint.AllViewedModelsByScene(scene.id));
+            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene(scene.id));
+
+            studyObjectsCount = userViewedModels.Length;
+            foreach (Model model in allModels)
+            {
+                if (model.is_informational) objectsCount++;
+            }
+
+            studyObjectsInfo.text = $"Изучено: {studyObjectsCount}/{objectsCount}";
         }
     }
 }
