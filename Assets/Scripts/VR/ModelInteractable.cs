@@ -75,8 +75,6 @@ namespace VirtualEngineer.VR
             UserModelViewCreateResult result = await ApiService.CreateUserModelView(userModelView);
             if (result == UserModelViewCreateResult.Success)
                 cardController.isViewed = true;
-
-            Debug.Log($"Изучено: {cardController.ModelId}"); 
         }
     }
 }

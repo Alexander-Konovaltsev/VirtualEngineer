@@ -747,7 +747,7 @@ Transform:
   m_GameObject: {fileID: 4129178332983935744}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.60046, y: -0.05, z: 19.63313}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -768,6 +768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VirtualEngineer.Controllers.InfoModelCardController
   title: {fileID: 5633371962590587432}
   descripiton: {fileID: 876377428864406582}
+  isViewed: 0
 --- !u!1 &5552581475877365740
 GameObject:
   m_ObjectHideFlags: 0
