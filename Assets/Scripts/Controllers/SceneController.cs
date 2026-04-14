@@ -14,6 +14,7 @@ namespace VirtualEngineer.Controllers
     {
         [SerializeField] 
         private GameObject infoModelCardPrefab;
+        UserModelView[] userViewedModels;
 
         private async void Awake()
         {
@@ -24,6 +25,8 @@ namespace VirtualEngineer.Controllers
             }
 
             Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
+            userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>
+                                               (Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId));
 
             Dictionary<int?, List<Model>> tree = BuildModelsTree(allModels.ToList());
 
@@ -78,9 +81,9 @@ namespace VirtualEngineer.Controllers
 
             Vector3 cardPos = transform.position + Vector3.up * 1f;
             card.transform.SetPositionAndRotation(cardPos, Quaternion.identity);
-
+            
             InfoModelCardController cardController = card.GetComponent<InfoModelCardController>();
-            cardController.Init(model.title, model.description);
+            cardController.Init(model.title, model.description, CheckModelIsViewed(model.id), model.id);
 
             InitXR(transform, card);
         }
@@ -103,6 +106,16 @@ namespace VirtualEngineer.Controllers
             interactable.selectEntered.AddListener(_ => modelController.OnSelect());
             interactable.hoverEntered.AddListener(_ => modelController.OnHoverEnter());
             interactable.hoverExited.AddListener(_ => modelController.OnHoverExit());
+        }
+
+        private bool CheckModelIsViewed(int modelId)
+        {
+            foreach (UserModelView userModelView in userViewedModels)
+            {
+                if (userModelView.model_id == modelId) return true;
+            }
+
+            return false;
         }
     }
 }

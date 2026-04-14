@@ -1,11 +1,17 @@
 using UnityEngine;
+using VirtualEngineer.Controllers;
+using VirtualEngineer.Services;
+using VirtualEngineer.Enums;
 using UnityEngine.XR.Interaction.Toolkit;
+using VirtualEngineer.Models;
+using System.Threading.Tasks;
 
 namespace VirtualEngineer.VR
 {
     public class ModelInteractable : MonoBehaviour
     {
         private GameObject card;
+        private InfoModelCardController cardController;
         private Renderer[] renderers;
         private void Awake()
         {
@@ -15,11 +21,15 @@ namespace VirtualEngineer.VR
         public void Init(GameObject card)
         {
             this.card = card;
+            cardController = card.GetComponent<InfoModelCardController>();
         }
 
         public void OnSelect()
         {
             if (card == null) return;
+
+            if (!cardController.isViewed)
+                CreateModelView();
 
             card.SetActive(!card.activeSelf);
         }
@@ -52,6 +62,21 @@ namespace VirtualEngineer.VR
                     }
                 }
             }
+        }
+
+        private async void CreateModelView()
+        { 
+            UserModelViewCreateRequest userModelView = new UserModelViewCreateRequest
+            {
+                scene_id=(int)AppDataService.SelectedSceneId,
+                model_id=cardController.ModelId
+            };
+
+            UserModelViewCreateResult result = await ApiService.CreateUserModelView(userModelView);
+            if (result == UserModelViewCreateResult.Success)
+                cardController.isViewed = true;
+
+            Debug.Log($"Изучено: {cardController.ModelId}"); 
         }
     }
 }

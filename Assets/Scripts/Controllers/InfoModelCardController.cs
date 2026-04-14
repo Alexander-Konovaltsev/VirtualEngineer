@@ -10,6 +10,9 @@ namespace VirtualEngineer.Controllers
         [SerializeField]
         private TMP_Text descripiton;
 
+        public bool isViewed;
+        private int modelId;
+        public int ModelId => modelId;
         private Transform cameraTransform;
         private Vector3 basePosition;
 
@@ -40,10 +43,12 @@ namespace VirtualEngineer.Controllers
             transform.Rotate(0, 180f, 0);
         }
   
-        public void Init(string title, string descripiton)
+        public void Init(string title, string descripiton, bool isViewed, int modelId)
         {
             this.title.text = title;
             this.descripiton.text = descripiton;
+            this.isViewed = isViewed;
+            this.modelId = modelId;
         }
     }
 }
