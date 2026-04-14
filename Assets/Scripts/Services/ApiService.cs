@@ -67,6 +67,32 @@ namespace VirtualEngineer.Services
             }
         }
 
+        public static async Task<UserModelViewCreateResult> CreateUserModelView(UserModelViewCreateRequest data)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionService.AccessToken);
+
+            string json = JsonConvert.SerializeObject(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(BaseUrl + Endpoint.UserModelViewCreate, content);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    return UserModelViewCreateResult.Success;
+
+                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                    return UserModelViewCreateResult.DataError;
+
+                return UserModelViewCreateResult.NetworkError;
+            }
+            catch (TaskCanceledException)
+            {
+                return UserModelViewCreateResult.TimeoutError;
+            }
+        }
+
         public static async Task<UserAuthorizationResult> AuthorizationUser(UserAuthorizationRequest auth)
         {
             using var client = new HttpClient();

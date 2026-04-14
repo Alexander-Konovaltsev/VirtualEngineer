@@ -22,5 +22,6 @@ namespace VirtualEngineer.Enums
         {
             return $"/models-views/{sceneId}";
         }
+        public const string UserModelViewCreate = "/models-views/create";
     }
 }
