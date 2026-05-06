@@ -16,7 +16,7 @@ namespace VirtualEngineer.Helpers
         {
             return string.Concat(value.Split('_', StringSplitOptions.RemoveEmptyEntries).
                                  Select(word => char.ToUpper(word[0]) + word.Substring(1))
-        );
+            );
         }
     }
 }

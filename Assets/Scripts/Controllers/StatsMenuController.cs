@@ -9,13 +9,12 @@ using System.Linq;
 
 namespace VirtualEngineer.Controllers
 {
-    public class StatsMenuController : MonoBehaviour
+    public class StatsMenuController : BaseMenuController
     {
         [SerializeField]
         private TMP_Text title;
         [SerializeField]
         private TMP_Text descripiton;
-        private GameObject menu;
         private Model[] allModels;
         private UserModelView[] userViewedModels;
         private Transform pauseMenuTransform;
@@ -23,14 +22,15 @@ namespace VirtualEngineer.Controllers
         private void Awake()
         {
             title.text = "Статистика";
-            menu = gameObject;
         }
 
         private void OnEnable()
         {
+            ResizeMenu(transform);
+
             descripiton.text = "";
-            menu.SetActive(true);
-            menu.transform.SetPositionAndRotation(pauseMenuTransform.position, pauseMenuTransform.rotation);
+            gameObject.transform.SetPositionAndRotation(pauseMenuTransform.position, pauseMenuTransform.rotation);
+
             LoadSceneStats();
         }
 
@@ -77,9 +77,10 @@ namespace VirtualEngineer.Controllers
             descripiton.text = sb.ToString();
         }
 
-        public void BackToPauseMenu()
+        public void BackToPauseMenuAction()
         {
-            menu.SetActive(false);
+            pauseMenuTransform.gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }

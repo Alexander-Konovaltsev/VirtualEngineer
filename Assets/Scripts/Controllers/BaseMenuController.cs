@@ -13,5 +13,16 @@ namespace VirtualEngineer.Controllers
         {
             return GetComponentInParent<MenusManager>();
         }
+
+        protected void ResizeMenu(Transform menuTransform, int width=100, int height=100)
+        {
+            Transform canvas = menuTransform.parent;
+            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+            canvasRect.sizeDelta = new Vector2(width, height);
+
+            Transform panel = menuTransform.GetChild(0);
+            RectTransform panelRect = panel.GetComponent<RectTransform>();
+            panelRect.sizeDelta = new Vector2(width, height);
+        }
     }
 }
