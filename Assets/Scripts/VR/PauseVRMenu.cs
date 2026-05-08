@@ -45,7 +45,7 @@ namespace VirtualEngineer.VR
             isMenuOpen = true;
 
             Vector3 forward = cameraTransform.forward;
-            Vector3 position = cameraTransform.position + forward * 1.75f;
+            Vector3 position = cameraTransform.position + forward * 2f;
 
             menu.transform.position = position;
 

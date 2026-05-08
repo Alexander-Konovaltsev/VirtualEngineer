@@ -225,7 +225,7 @@ MonoBehaviour:
       - m_Target: {fileID: 565662326}
         m_TargetAssemblyTypeName: VirtualEngineer.Controllers.PauseSceneMenuController,
           Assembly-CSharp
-        m_MethodName: ShowStatsMenuAction
+        m_MethodName: ShowTestsMenuAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2100,6 +2100,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6478113100860760380, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1264889378}
+    - target: {fileID: 6478113100860760380, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BackToPauseMenuAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478113100860760380, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VirtualEngineer.Controllers.SelectTestMenuController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 7063012052654516485, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -2124,7 +2136,10 @@ PrefabInstance:
     - {fileID: 8002296355316971581, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 246316995273206461, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1264889378}
   m_SourcePrefab: {fileID: 100100000, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
 --- !u!224 &1264889376 stripped
 RectTransform:
@@ -2136,6 +2151,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 246316995273206461, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
   m_PrefabInstance: {fileID: 1264889375}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1264889378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264889377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f931da2fadce90f4997c86dd6b7eae58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VirtualEngineer.Controllers.SelectTestMenuController
+  loadText: {fileID: 1630241957}
 --- !u!1 &1340139427
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2634,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1445104230}
   m_CullTransparentMesh: 1
+--- !u!114 &1630241957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3385828589941298204, guid: 2078cae85a2a8984daaa87c9d87f0eb2, type: 3}
+  m_PrefabInstance: {fileID: 1264889375}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1676824135
 GameObject:
   m_ObjectHideFlags: 0
@@ -2692,7 +2731,7 @@ MonoBehaviour:
       - m_Target: {fileID: 262101152}
         m_TargetAssemblyTypeName: VirtualEngineer.Controllers.StatsMenuController,
           Assembly-CSharp
-        m_MethodName: BackToPauseMenu
+        m_MethodName: BackToPauseMenuAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
