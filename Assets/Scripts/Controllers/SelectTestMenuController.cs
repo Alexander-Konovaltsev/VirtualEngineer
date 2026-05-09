@@ -16,25 +16,21 @@ namespace VirtualEngineer.Controllers
         [SerializeField] 
         private GameObject testCardPrefab;
         private Quiz[] quizzes;
+        private Result[] results;
 
         private async void OnEnable()
         {
             ResizeMenu(transform, 180, 140);
             gameObject.transform.SetPositionAndRotation(pauseMenuTransform.position, pauseMenuTransform.rotation);
 
+            ClearContent();
+
             loadText.gameObject.SetActive(true);
 
-            quizzes = await ApiService.GetAsyncPrivate<Quiz>(Endpoint.QuizzesBySceneId((int)AppDataService.SelectedSceneId));
+            GetSceneTests();
+            GetUserResults();
 
             loadText.gameObject.SetActive(false);
-
-            foreach (Quiz quiz in quizzes)
-            {
-                GameObject quizObj = Instantiate(testCardPrefab, content);
-
-                TestCardController testController = quizObj.GetComponent<TestCardController>();
-                testController.Init(quiz);
-            }
         }
 
         public void Init(Transform pauseMenuTransform)
@@ -46,6 +42,32 @@ namespace VirtualEngineer.Controllers
         {
             pauseMenuTransform.gameObject.SetActive(true);
             gameObject.SetActive(false);
+        }
+
+        private void ClearContent()
+        {
+            foreach (Transform child in content)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        private async void GetSceneTests()
+        {
+            quizzes = await ApiService.GetAsyncPrivate<Quiz>(Endpoint.QuizzesBySceneId((int)AppDataService.SelectedSceneId));
+
+            foreach (Quiz quiz in quizzes)
+            {
+                GameObject quizObj = Instantiate(testCardPrefab, content);
+
+                TestCardController testController = quizObj.GetComponent<TestCardController>();
+                testController.Init(quiz);
+            }
+        }
+
+        private async void GetUserResults()
+        {
+            results = await ApiService.GetAsyncPrivate<Result>(Endpoint.ResultsByUser);
         }
     }
 }

@@ -27,5 +27,6 @@ namespace VirtualEngineer.Enums
         {
             return $"/quizzes/{sceneId}";
         }
+        public const string ResultsByUser = "/results";
     }
 }
