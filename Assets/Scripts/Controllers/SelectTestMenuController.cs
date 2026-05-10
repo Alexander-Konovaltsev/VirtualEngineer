@@ -4,6 +4,7 @@ using VirtualEngineer.Models;
 using VirtualEngineer.Services;
 using VirtualEngineer.Enums;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace VirtualEngineer.Controllers
 {
@@ -33,6 +34,13 @@ namespace VirtualEngineer.Controllers
             ClearContent();
 
             loadText.gameObject.SetActive(true);
+
+            if (!await CheckUserAllTestLearned())
+            {
+                loadText.text = "Для прохождения тестирования необходимо изучить все объекты на сцене";
+
+                return;
+            }
 
             GetUserResults();
             GetSceneTests();
@@ -83,6 +91,18 @@ namespace VirtualEngineer.Controllers
                 .Where(r => r.quiz_id == quiz.id)
                 .OrderBy(r => r.id)
                 .ToArray();
+        }
+
+        private async Task<bool> CheckUserAllTestLearned()
+        {
+            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
+            UserModelView[] userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>
+                               (Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId));
+
+            if (userViewedModels.Length < allModels.Count(m => m.is_informational))
+                return false;
+            
+            return true;
         }
     }
 }
