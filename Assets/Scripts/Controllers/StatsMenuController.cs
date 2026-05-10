@@ -58,7 +58,7 @@ namespace VirtualEngineer.Controllers
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"Изучено объектов: <b>{viewedModelIds.Count}/{allModelsCount}</b>");
+            sb.AppendLine($"<b>Изучено объектов:</b> {viewedModelIds.Count}/{allModelsCount}");
 
             foreach (var model in allModels)
             {

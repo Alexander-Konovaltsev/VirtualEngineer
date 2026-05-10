@@ -20,11 +20,25 @@ namespace VirtualEngineer.Controllers
         private Button aboutBtn;
         private Quiz quiz;
         private Result[] results;
+        private TestInfoMenuController testInfoMenuController;
+        private Transform selectTestMenuTransform;
 
-        public void Init(Quiz quiz, Result[] results)
+        private void Awake()
+        {
+            aboutBtn.onClick.AddListener(ShowTestInfoAction);
+        }
+        
+        public void Init(
+            Quiz quiz, 
+            Result[] results, 
+            TestInfoMenuController testInfoMenuController, 
+            Transform selectTestMenuTransform
+        )
         {
             this.quiz = quiz;
             this.results = results;
+            this.testInfoMenuController = testInfoMenuController;
+            this.selectTestMenuTransform = selectTestMenuTransform;
 
             InitCardInfo();
         }
@@ -58,6 +72,14 @@ namespace VirtualEngineer.Controllers
             }
 
             attempt.text = $"Попытки: {userAttempts}/{quiz.attempts_count}";
+        }
+
+        private void ShowTestInfoAction()
+        {
+            selectTestMenuTransform.gameObject.SetActive(false);
+
+            testInfoMenuController.Init(quiz, selectTestMenuTransform);
+            testInfoMenuController.gameObject.SetActive(true);
         }
     }
 }

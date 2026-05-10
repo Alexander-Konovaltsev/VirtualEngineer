@@ -18,6 +18,12 @@ namespace VirtualEngineer.Controllers
         private GameObject testCardPrefab;
         private Quiz[] quizzes;
         private Result[] results;
+        private TestInfoMenuController testInfoMenuController;
+
+        private void Awake()
+        {
+            testInfoMenuController = transform.parent.Find("TestInfoMenu").GetComponent<TestInfoMenuController>();
+        }
 
         private async void OnEnable()
         {
@@ -62,7 +68,7 @@ namespace VirtualEngineer.Controllers
                 GameObject quizObj = Instantiate(testCardPrefab, content);
 
                 TestCardController testController = quizObj.GetComponent<TestCardController>();
-                testController.Init(quiz, GetUserResultsByQuiz(quiz));
+                testController.Init(quiz, GetUserResultsByQuiz(quiz), testInfoMenuController, transform);
             }
         }
 
