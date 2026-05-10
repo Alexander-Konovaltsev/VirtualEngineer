@@ -3,6 +3,7 @@ using TMPro;
 using VirtualEngineer.Models;
 using VirtualEngineer.Services;
 using VirtualEngineer.Enums;
+using System.Linq;
 
 namespace VirtualEngineer.Controllers
 {
@@ -27,8 +28,8 @@ namespace VirtualEngineer.Controllers
 
             loadText.gameObject.SetActive(true);
 
-            GetSceneTests();
             GetUserResults();
+            GetSceneTests();
 
             loadText.gameObject.SetActive(false);
         }
@@ -61,13 +62,21 @@ namespace VirtualEngineer.Controllers
                 GameObject quizObj = Instantiate(testCardPrefab, content);
 
                 TestCardController testController = quizObj.GetComponent<TestCardController>();
-                testController.Init(quiz);
+                testController.Init(quiz, GetUserResultsByQuiz(quiz));
             }
         }
 
         private async void GetUserResults()
         {
             results = await ApiService.GetAsyncPrivate<Result>(Endpoint.ResultsByUser);
+        }
+        
+        private Result[] GetUserResultsByQuiz(Quiz quiz)
+        {
+            return results
+                .Where(r => r.quiz_id == quiz.id)
+                .OrderBy(r => r.id)
+                .ToArray();
         }
     }
 }

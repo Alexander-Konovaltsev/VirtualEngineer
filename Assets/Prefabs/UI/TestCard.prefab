@@ -540,7 +540,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041D\u0430\u0447\u0430\u0442\u044C"
+  m_text: "\u041F\u0440\u043E\u0439\u0442\u0438"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -993,6 +993,8 @@ MonoBehaviour:
   title: {fileID: 5868192740975658259}
   result: {fileID: 4156078878016545909}
   attempt: {fileID: 1155958213905118947}
+  passBtn: {fileID: 4586907318961603064}
+  aboutBtn: {fileID: 7487181858034503129}
 --- !u!1 &8139094186764435913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,7 +1008,7 @@ GameObject:
   - component: {fileID: 9078032873186853085}
   - component: {fileID: 4586907318961603064}
   m_Layer: 0
-  m_Name: SelectBtn
+  m_Name: PassBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -10,6 +10,8 @@ namespace VirtualEngineer.VR
         [SerializeField]
         private GameObject menu;
         [SerializeField]
+        private Transform allMenusParent;
+        [SerializeField]
         private MonoBehaviour moveProvider;
         private Transform cameraTransform;
         private bool isMenuOpen = false;
@@ -62,7 +64,11 @@ namespace VirtualEngineer.VR
         {
             isMenuOpen = false;
 
-            menu.SetActive(false);
+            foreach (Transform menu in allMenusParent)
+            {
+                menu.gameObject.SetActive(false);
+            }
+
             LockMovement(false);
         }
 

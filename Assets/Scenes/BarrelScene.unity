@@ -138,6 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VirtualEngineer.VR.PauseVRMenu
   menuAction: {fileID: 1016017246370241827, guid: dfeb21643f0d49543aa63ca6c8f773fb, type: 3}
   menu: {fileID: 565662322}
+  allMenusParent: {fileID: 312962024}
   moveProvider: {fileID: 188976200}
 --- !u!1 &92708334
 GameObject:
