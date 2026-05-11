@@ -21,7 +21,7 @@ namespace VirtualEngineer.Controllers
 
         private void Awake()
         {
-            title.text = "Статистика";
+            title.text = "Прогресс";
         }
 
         private void OnEnable()
