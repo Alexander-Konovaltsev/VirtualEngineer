@@ -20,10 +20,12 @@ namespace VirtualEngineer.Controllers
         private Quiz[] quizzes;
         private Result[] results;
         private TestInfoMenuController testInfoMenuController;
+        private TestMenuController testMenuController;
 
         private void Awake()
         {
             testInfoMenuController = transform.parent.Find("TestInfoMenu").GetComponent<TestInfoMenuController>();
+            testMenuController = transform.parent.Find("TestMenu").GetComponent<TestMenuController>();
         }
 
         private async void OnEnable()
@@ -42,8 +44,8 @@ namespace VirtualEngineer.Controllers
                 return;
             }
 
-            GetUserResults();
-            GetSceneTests();
+            await GetUserResults();
+            await GetSceneTests();
 
             loadText.gameObject.SetActive(false);
         }
@@ -67,7 +69,7 @@ namespace VirtualEngineer.Controllers
             }
         }
 
-        private async void GetSceneTests()
+        private async Task GetSceneTests()
         {
             quizzes = await ApiService.GetAsyncPrivate<Quiz>(Endpoint.QuizzesBySceneId((int)AppDataService.SelectedSceneId));
 
@@ -76,11 +78,11 @@ namespace VirtualEngineer.Controllers
                 GameObject quizObj = Instantiate(testCardPrefab, content);
 
                 TestCardController testController = quizObj.GetComponent<TestCardController>();
-                testController.Init(quiz, GetUserResultsByQuiz(quiz), testInfoMenuController, transform);
+                testController.Init(quiz, GetUserResultsByQuiz(quiz), testInfoMenuController, testMenuController, transform);
             }
         }
 
-        private async void GetUserResults()
+        private async Task GetUserResults()
         {
             results = await ApiService.GetAsyncPrivate<Result>(Endpoint.ResultsByUser);
         }

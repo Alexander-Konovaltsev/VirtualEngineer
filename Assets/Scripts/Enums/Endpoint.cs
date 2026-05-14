@@ -28,5 +28,9 @@ namespace VirtualEngineer.Enums
             return $"/quizzes/{sceneId}";
         }
         public const string ResultsByUser = "/results";
+        public static string QuestionsByQuizId(int quizId)
+        {
+            return $"/questions/{quizId}";
+        }
     }
 }

@@ -21,23 +21,27 @@ namespace VirtualEngineer.Controllers
         private Quiz quiz;
         private Result[] results;
         private TestInfoMenuController testInfoMenuController;
+        private TestMenuController testMenuController;
         private Transform selectTestMenuTransform;
 
         private void Awake()
         {
             aboutBtn.onClick.AddListener(ShowTestInfoAction);
+            passBtn.onClick.AddListener(PassTestAction);
         }
         
         public void Init(
             Quiz quiz, 
             Result[] results, 
             TestInfoMenuController testInfoMenuController, 
+            TestMenuController testMenuController, 
             Transform selectTestMenuTransform
         )
         {
             this.quiz = quiz;
             this.results = results;
             this.testInfoMenuController = testInfoMenuController;
+            this.testMenuController = testMenuController;
             this.selectTestMenuTransform = selectTestMenuTransform;
 
             InitCardInfo();
@@ -80,6 +84,14 @@ namespace VirtualEngineer.Controllers
 
             testInfoMenuController.Init(quiz, selectTestMenuTransform);
             testInfoMenuController.gameObject.SetActive(true);
+        }
+
+        private void PassTestAction()
+        {
+            selectTestMenuTransform.gameObject.SetActive(false);
+
+            testMenuController.Init(quiz, selectTestMenuTransform);
+            testMenuController.gameObject.SetActive(true);
         }
     }
 }
