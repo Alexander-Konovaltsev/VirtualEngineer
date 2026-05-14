@@ -38,13 +38,11 @@ namespace VirtualEngineer.Controllers
         private Transform selectTestMenuTransform;
         private List<Question> questions;
         private List<Question> selectedQuestions;
+        private HashSet<int> answeredIds;
         private int currentQuestionIndex = 0;
         private Coroutine timerCoroutine;
         private bool isFinished = false;
-
-
         private float remainingTime;
-
         private List<UserAnswer> userAnswers = new List<UserAnswer>();
 
         public void Init(Quiz quiz, Transform selectTestMenuTransform)
@@ -89,6 +87,8 @@ namespace VirtualEngineer.Controllers
         private void SelectRandomQuestions()
         {
             selectedQuestions = questions.OrderBy(x => UnityEngine.Random.value).Take(quiz.questions_count).ToList();
+            
+            answeredIds = new HashSet<int>();
         }
 
         private void StartTimer()
@@ -124,7 +124,7 @@ namespace VirtualEngineer.Controllers
             ClearAnswers();
 
             answerBtn.interactable = false;
-            
+
             if (selectedQuestions.Count - userAnswers.Count == 1)
             {
                 skipBtn.interactable = false;
@@ -218,32 +218,29 @@ namespace VirtualEngineer.Controllers
                 created_at = DateTime.UtcNow
             });
 
+            answeredIds.Add(question.id);
+
             NextQuestion();
         }
 
         private void NextQuestion()
         {
-            currentQuestionIndex++;
+            int nextIndex = GetNextQuestionIndex(currentQuestionIndex);
 
-            if(currentQuestionIndex >= selectedQuestions.Count)
+            if (nextIndex == -1)
             {
                 FinishTest();
                 return;
             }
+
+            currentQuestionIndex = nextIndex;
 
             GenerateQuestion();
         }
 
         private void SkipQuestion()
         {
-            currentQuestionIndex++;
-
-            if(currentQuestionIndex >= selectedQuestions.Count)
-            {
-                currentQuestionIndex = 0;
-            }
-
-            GenerateQuestion();
+            NextQuestion();
         }
 
         private int CalculateResultPercent()
@@ -299,6 +296,27 @@ namespace VirtualEngineer.Controllers
             int percent = CalculateResultPercent();
 
             Debug.Log(percent);
+        }
+
+        private int GetNextQuestionIndex(int currentIndex)
+        {
+            int start = currentIndex;
+
+            do
+            {
+                currentIndex++;
+
+                if (currentIndex >= selectedQuestions.Count)
+                    currentIndex = 0;
+
+                int id = selectedQuestions[currentIndex].id;
+
+                if (!answeredIds.Contains(id))
+                    return currentIndex;
+
+            } while (currentIndex != start);
+
+            return -1;
         }
     }
 }
