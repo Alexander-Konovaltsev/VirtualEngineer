@@ -78,7 +78,7 @@ namespace VirtualEngineer.Controllers
                 GameObject quizObj = Instantiate(testCardPrefab, content);
 
                 TestCardController testController = quizObj.GetComponent<TestCardController>();
-                testController.Init(quiz, GetUserResultsByQuiz(quiz), testInfoMenuController, testMenuController, transform);
+                testController.Init(quiz, GetUserResultsByQuiz(quiz), testInfoMenuController, testMenuController, transform, pauseMenuTransform);
             }
         }
 

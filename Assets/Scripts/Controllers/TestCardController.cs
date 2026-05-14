@@ -23,6 +23,7 @@ namespace VirtualEngineer.Controllers
         private TestInfoMenuController testInfoMenuController;
         private TestMenuController testMenuController;
         private Transform selectTestMenuTransform;
+        private Transform pauseMenuTransform;
 
         private void Awake()
         {
@@ -35,7 +36,8 @@ namespace VirtualEngineer.Controllers
             Result[] results, 
             TestInfoMenuController testInfoMenuController, 
             TestMenuController testMenuController, 
-            Transform selectTestMenuTransform
+            Transform selectTestMenuTransform,
+            Transform pauseMenuTransform
         )
         {
             this.quiz = quiz;
@@ -43,6 +45,7 @@ namespace VirtualEngineer.Controllers
             this.testInfoMenuController = testInfoMenuController;
             this.testMenuController = testMenuController;
             this.selectTestMenuTransform = selectTestMenuTransform;
+            this.pauseMenuTransform = pauseMenuTransform;
 
             InitCardInfo();
         }
@@ -90,7 +93,7 @@ namespace VirtualEngineer.Controllers
         {
             selectTestMenuTransform.gameObject.SetActive(false);
 
-            testMenuController.Init(quiz, selectTestMenuTransform);
+            testMenuController.Init(quiz, selectTestMenuTransform, pauseMenuTransform);
             testMenuController.gameObject.SetActive(true);
         }
     }

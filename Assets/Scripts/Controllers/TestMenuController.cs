@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections;
 using UnityEngine.UI;
+using System.Text;
 
 namespace VirtualEngineer.Controllers
 {
@@ -34,8 +35,11 @@ namespace VirtualEngineer.Controllers
         private Button answerBtn;
         [SerializeField]
         private Button skipBtn;
+        [SerializeField]
+        private Button backBtn;
         private Quiz quiz;
         private Transform selectTestMenuTransform;
+        private Transform pauseMenuTransform;
         private List<Question> questions;
         private List<Question> selectedQuestions;
         private HashSet<int> answeredIds;
@@ -44,25 +48,28 @@ namespace VirtualEngineer.Controllers
         private bool isFinished = false;
         private float remainingTime;
         private List<UserAnswer> userAnswers = new List<UserAnswer>();
+        private int correctCount;
 
-        public void Init(Quiz quiz, Transform selectTestMenuTransform)
+        public void Init(Quiz quiz, Transform selectTestMenuTransform, Transform pauseMenuTransform)
         {
             this.quiz = quiz;
             this.selectTestMenuTransform = selectTestMenuTransform;
+            this.pauseMenuTransform = pauseMenuTransform;
         }
 
         private void Awake()
         {
-            answerBtn.onClick.AddListener(SubmitAnswer);
-            skipBtn.onClick.AddListener(SkipQuestion);
+            answerBtn.onClick.AddListener(SubmitAnswerAction);
+            skipBtn.onClick.AddListener(SkipQuestionAction);
+            backBtn.onClick.AddListener(BackToSelectTestMenuAction);
         }
         
         private async void OnEnable()
         {
-            ResizeMenu(transform, 180, 140);
+            PrepareMenu();
 
-            gameObject.transform.SetPositionAndRotation(selectTestMenuTransform.position, selectTestMenuTransform.rotation);
-
+            PrepareFields();
+            
             await LoadQuestions();
 
             SelectRandomQuestions();
@@ -87,8 +94,6 @@ namespace VirtualEngineer.Controllers
         private void SelectRandomQuestions()
         {
             selectedQuestions = questions.OrderBy(x => UnityEngine.Random.value).Take(quiz.questions_count).ToList();
-            
-            answeredIds = new HashSet<int>();
         }
 
         private void StartTimer()
@@ -191,7 +196,7 @@ namespace VirtualEngineer.Controllers
             answerBtn.interactable = hasSelected;
         }
 
-        private void SubmitAnswer()
+        private void SubmitAnswerAction()
         {
             Question question = selectedQuestions[currentQuestionIndex];
 
@@ -238,14 +243,14 @@ namespace VirtualEngineer.Controllers
             GenerateQuestion();
         }
 
-        private void SkipQuestion()
+        private void SkipQuestionAction()
         {
             NextQuestion();
         }
 
         private int CalculateResultPercent()
         {
-            int correctCount = 0;
+            correctCount = 0;
 
             foreach (Question question in selectedQuestions)
             {
@@ -295,7 +300,7 @@ namespace VirtualEngineer.Controllers
 
             int percent = CalculateResultPercent();
 
-            Debug.Log(percent);
+            FormResultText(percent);
         }
 
         private int GetNextQuestionIndex(int currentIndex)
@@ -317,6 +322,51 @@ namespace VirtualEngineer.Controllers
             } while (currentIndex != start);
 
             return -1;
+        }
+
+        private void FormResultText(int percent)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"<b>Результат:</b> {percent}%");
+            sb.AppendLine($"{correctCount}/{quiz.questions_count}");
+
+            loadText.text = sb.ToString();
+
+            backBtn.gameObject.SetActive(true);
+            testContainer.gameObject.SetActive(false);
+            loadText.gameObject.SetActive(true);
+
+            AppDataService.IsTestMode = false;
+        }
+
+        private void PrepareMenu()
+        {
+            ResizeMenu(transform, 180, 140);
+            gameObject.transform.SetPositionAndRotation(selectTestMenuTransform.position, selectTestMenuTransform.rotation);
+        }
+
+        private void PrepareFields()
+        {
+            answeredIds = new HashSet<int>();
+            userAnswers.Clear();
+            currentQuestionIndex = 0;
+            loadText.text = "Загрузка...";
+            backBtn.gameObject.SetActive(false);
+            AppDataService.IsTestMode = true;
+            isFinished = false;
+            skipBtn.interactable = true;
+        }
+
+        private void BackToSelectTestMenuAction()
+        {
+            gameObject.SetActive(false);
+
+            SelectTestMenuController selectTestMenuController = 
+                selectTestMenuTransform.GetComponent<SelectTestMenuController>();
+
+            selectTestMenuController.Init(pauseMenuTransform);
+            selectTestMenuTransform.gameObject.SetActive(true);
         }
     }
 }

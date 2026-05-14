@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VirtualEngineer.Services;
 
 namespace VirtualEngineer.VR
 {
@@ -36,6 +37,9 @@ namespace VirtualEngineer.VR
 
         private void OnMenuPressed(InputAction.CallbackContext ctx)
         {
+            if (AppDataService.IsTestMode)
+                return;
+
             if (isMenuOpen)
                 CloseMenu();
             else
