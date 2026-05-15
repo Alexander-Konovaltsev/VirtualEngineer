@@ -10,6 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Data;
+using System.Net;
 
 namespace VirtualEngineer.Controllers
 {
@@ -69,9 +70,9 @@ namespace VirtualEngineer.Controllers
             rolesDropdown.SetOptions(new List<string> {"Загрузка..."});
             rolesDropdown.Dropdown.interactable = false;
 
-            roles = await ApiService.GetAsync<Role>(Endpoint.Roles);
+            ApiResponse<Role[]> getRolesResponse = await ApiService.GetAsync<Role>(Endpoint.Roles, false);
 
-            if (roles == null)
+            if (!getRolesResponse.isSuccess)
             {
                 rolesDropdown.SetOptions(new List<string> {"Ошибка"});
                 BaseHelper.SetText(
@@ -81,6 +82,8 @@ namespace VirtualEngineer.Controllers
                 
                 return;
             }
+
+            roles = getRolesResponse.data;
 
             regBtn.interactable = true;
             rolesDropdown.SetOptions(roles.Select(r => r.name).ToList());
@@ -113,35 +116,47 @@ namespace VirtualEngineer.Controllers
             regBtn.interactable = false;
             regBtnText.text = "Обработка...";
             
-            UserCreateResult createResult = await ApiService.CreateUser(user);
+            ApiResponse<UserCreateResponse> createResponse = 
+                await ApiService.PostAsync<UserCreateRequest, UserCreateResponse>(
+                    Endpoint.UserCreate, 
+                    user, 
+                    false
+                );
             
-            switch (createResult)
+            switch (createResponse.statusCode)
             {
-                case UserCreateResult.Success:
+                case HttpStatusCode.Created:
                     regBtnText.text = "Успешно";
+
                     break;
-                case UserCreateResult.EmailAlreadyExists:
+
+                case HttpStatusCode.Conflict:
                     regBtnText.text = "Зарегистрироваться";
                     regBtn.interactable = true;
                     BaseHelper.SetText(
                         emailInputValidator.ErrorText, 
                         "Email уже используется"
                     );
+
                     break;
-                case UserCreateResult.DataError:
+
+                case HttpStatusCode.UnprocessableEntity:
                     regBtnText.text = "Зарегистрироваться";
                     regBtn.interactable = true;
                     BaseHelper.SetText(
                         workplaceInputValidator.ErrorText, 
                         "Проверьте корректность данных"
                     );
+
                     break;
+
                 default:
                     regBtnText.text = "Ошибка";
                     BaseHelper.SetText(
                         workplaceInputValidator.ErrorText, 
                         "Проверьте подключение к интернету"
                     );
+
                     break;
             }
         }

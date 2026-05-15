@@ -1,13 +1,10 @@
-using VirtualEngineer.Models;
-using VirtualEngineer.Enums;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using System.Diagnostics;
-using UnityEngine;
 using System;
+using System.Net;
 
 namespace VirtualEngineer.Services
 {
@@ -15,138 +12,118 @@ namespace VirtualEngineer.Services
     {
         private const string BaseUrl = "http://127.0.0.1:8080";
 
-        public static async Task<T[]> GetAsync<T>(string endpoint)
+        public static async Task<ApiResponse<T[]>> GetAsync<T>(
+            string endpoint, 
+            bool isProtected = true
+        )
         {
             using var client = new HttpClient();
+
+            if (isProtected)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Bearer", 
+                    SessionService.AccessToken
+                );
+            }
 
             try
             {
                 var response = await client.GetAsync(BaseUrl + endpoint);
 
-                if (!response.IsSuccessStatusCode)
-                    return null;
-
                 string json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T[]>(json);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-        
-        public static async Task<UserCreateResult> CreateUser(UserCreateRequest user)
-        {
-            using var client = new HttpClient();
 
-            string json = JsonConvert.SerializeObject(user);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                T[] data = Array.Empty<T>();
 
-            try
-            {
-                var response = await client.PostAsync(BaseUrl + Endpoint.UserCreate, content);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Created)
-                    return UserCreateResult.Success;
-
-                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
-                    return UserCreateResult.EmailAlreadyExists;
-
-                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
-                    return UserCreateResult.DataError;
-
-                return UserCreateResult.NetworkError;
-            }
-            catch (TaskCanceledException)
-            {
-                return UserCreateResult.TimeoutError;
-            }
-            catch
-            {
-                return UserCreateResult.NetworkError;
-            }
-        }
-
-        public static async Task<UserModelViewCreateResult> CreateUserModelView(UserModelViewCreateRequest data)
-        {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionService.AccessToken);
-
-            string json = JsonConvert.SerializeObject(data);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var response = await client.PostAsync(BaseUrl + Endpoint.UserModelViewCreate, content);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    return UserModelViewCreateResult.Success;
-
-                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
-                    return UserModelViewCreateResult.DataError;
-
-                return UserModelViewCreateResult.NetworkError;
-            }
-            catch (TaskCanceledException)
-            {
-                return UserModelViewCreateResult.TimeoutError;
-            }
-        }
-
-        public static async Task<UserAuthorizationResult> AuthorizationUser(UserAuthorizationRequest auth)
-        {
-            using var client = new HttpClient();
-
-            string json = JsonConvert.SerializeObject(auth);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var response = await client.PostAsync(BaseUrl + Endpoint.UserAuthorization, content);
-
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                if (!string.IsNullOrWhiteSpace(json))
                 {
-                    string responseJson = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<UserAuthorizationResponse>(responseJson);
-
-                    SessionService.SetToken(data.access_token);
-
-                    return UserAuthorizationResult.Success;
+                    data = JsonConvert.DeserializeObject<T[]>(json) ?? Array.Empty<T>();
                 }
 
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                    return UserAuthorizationResult.InvalidCredentials;
-
-                return UserAuthorizationResult.NetworkError;
+                return new ApiResponse<T[]>
+                {
+                    isSuccess = response.IsSuccessStatusCode,
+                    statusCode = response.StatusCode,
+                    data = data
+                };
             }
             catch (TaskCanceledException)
             {
-                return UserAuthorizationResult.TimeoutError;
+                return new ApiResponse<T[]>
+                {
+                    isSuccess = false,
+                    statusCode = HttpStatusCode.RequestTimeout,
+                    data = Array.Empty<T>()
+                };
             }
-            catch
+            catch (Exception)
             {
-                return UserAuthorizationResult.NetworkError;
+                return new ApiResponse<T[]>
+                {
+                    isSuccess = false,
+                    statusCode = HttpStatusCode.InternalServerError,
+                    data = Array.Empty<T>()
+                };
             }
         }
 
-        public static async Task<T[]> GetAsyncPrivate<T>(string endpoint)
+        public static async Task<ApiResponse<TResult>> PostAsync<TRequest, TResult>(
+            string endpoint, 
+            TRequest data,
+            bool isProtected = true
+        )
         {
             using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", SessionService.AccessToken);
+
+            if (isProtected)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                    "Bearer", 
+                    SessionService.AccessToken
+                );
+            }
+
+            string json = JsonConvert.SerializeObject(data);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             try
             {
-                var response = await client.GetAsync(BaseUrl + endpoint);
+                var response = await client.PostAsync(BaseUrl + endpoint, content);
 
-                if (!response.IsSuccessStatusCode)
-                    return null;
+                string responseJson = await response.Content.ReadAsStringAsync();
 
-                string json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<T[]>(json);
+                TResult result = default;
+
+                if (!string.IsNullOrWhiteSpace(responseJson))
+                {
+                    result = JsonConvert.DeserializeObject<TResult>(responseJson);
+                }
+
+                return new ApiResponse<TResult>
+                {
+                    isSuccess = response.IsSuccessStatusCode,
+                    statusCode = response.StatusCode,
+                    data = result
+                };
             }
-            catch
+            catch (TaskCanceledException)
             {
-                return null;
+                return new ApiResponse<TResult>
+                {
+                    isSuccess = false,
+                    statusCode = HttpStatusCode.RequestTimeout,
+                    data = default
+                };
+            }
+            catch (Exception)
+            {
+                return new ApiResponse<TResult>
+                {
+                    isSuccess = false,
+                    statusCode = HttpStatusCode.InternalServerError,
+                    data = default
+                };
             }
         }
     }

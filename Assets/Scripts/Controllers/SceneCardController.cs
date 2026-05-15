@@ -3,10 +3,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VirtualEngineer.UI;
-using VirtualEngineer.Helpers;
 using UnityEngine.SceneManagement;
 using VirtualEngineer.Services;
 using VirtualEngineer.Enums;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -58,8 +58,28 @@ namespace VirtualEngineer.Controllers
 
         private async void InitStudyObjectsInfo()
         {
-            UserModelView[] userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>(Endpoint.AllViewedModelsByScene(scene.id));
-            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene(scene.id));
+            ApiResponse<UserModelView[]> getUserViewedModelsResponse = 
+                await ApiService.GetAsync<UserModelView>(
+                    Endpoint.AllViewedModelsByScene(scene.id)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getUserViewedModelsResponse))
+            {
+                return;
+            }
+
+            ApiResponse<Model[]> getAllModelsResponse = 
+                await ApiService.GetAsync<Model>(
+                    Endpoint.AllModelsByScene(scene.id)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getAllModelsResponse))
+            {
+                return;
+            }
+
+            UserModelView[] userViewedModels = getUserViewedModelsResponse.data;
+            Model[] allModels = getAllModelsResponse.data;
 
             studyObjectsCount = userViewedModels.Length;
             foreach (Model model in allModels)

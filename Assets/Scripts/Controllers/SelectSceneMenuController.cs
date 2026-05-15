@@ -4,6 +4,7 @@ using VirtualEngineer.UI;
 using TMPro;
 using UnityEngine;
 using VirtualEngineer.Enums;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -29,12 +30,14 @@ namespace VirtualEngineer.Controllers
         {
             loadText.gameObject.SetActive(true);
 
-            scenes = await ApiService.GetAsyncPrivate<Scene>(Endpoint.Scenes);
+            ApiResponse<Scene[]> getScenesResponse = await ApiService.GetAsync<Scene>(Endpoint.Scenes);
 
-            if (scenes == null)
+            if (!ResponseValidator.CheckResponseSuccess(getScenesResponse))
             {
-                menusManager.ShowAuthorizationMenu();
+                return;
             }
+
+            scenes = getScenesResponse.data;
 
             loadText.gameObject.SetActive(false);
             

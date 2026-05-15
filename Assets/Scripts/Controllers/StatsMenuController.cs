@@ -6,6 +6,7 @@ using VirtualEngineer.Enums;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -41,9 +42,28 @@ namespace VirtualEngineer.Controllers
 
         private async void LoadSceneStats()
         {
-            allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
-            userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>
-                               (Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId));
+            ApiResponse<UserModelView[]> getUserViewedModelsResponse = 
+                await ApiService.GetAsync<UserModelView>(
+                    Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getUserViewedModelsResponse))
+            {
+                return;
+            }
+
+            ApiResponse<Model[]> getAllModelsResponse = 
+                await ApiService.GetAsync<Model>(
+                    Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getAllModelsResponse))
+            {
+                return;
+            }
+
+            userViewedModels = getUserViewedModelsResponse.data;
+            allModels = getAllModelsResponse.data;
 
             SetStatsText();
         }

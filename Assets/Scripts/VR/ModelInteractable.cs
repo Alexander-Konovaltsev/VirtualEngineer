@@ -72,8 +72,17 @@ namespace VirtualEngineer.VR
                 model_id=cardController.ModelId
             };
 
-            UserModelViewCreateResult result = await ApiService.CreateUserModelView(userModelView);
-            if (result == UserModelViewCreateResult.Success)
+            // UserModelViewCreateResult result = await ApiService.CreateUserModelView(userModelView);
+            // if (result == UserModelViewCreateResult.Success)
+            //     cardController.isViewed = true;
+
+            ApiResponse<UserModelView> createUserModelViewResponse = 
+                await ApiService.PostAsync<UserModelViewCreateRequest, UserModelView>(
+                    Endpoint.UserModelViewCreate, 
+                    userModelView
+                );
+
+            if (createUserModelViewResponse.isSuccess)
                 cardController.isViewed = true;
         }
     }

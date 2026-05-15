@@ -7,6 +7,7 @@ using VirtualEngineer.Helpers;
 using VirtualEngineer.UI;
 using TMPro;
 using UnityEngine.UI;
+using System.Net;
 
 namespace VirtualEngineer.Controllers
 {
@@ -62,27 +63,58 @@ namespace VirtualEngineer.Controllers
             authBtn.interactable = false;
             authBtnText.text = "Обработка...";
 
-            UserAuthorizationResult authorizationResult = await ApiService.AuthorizationUser(auth);
+            ApiResponse<UserAuthorizationResponse> authorizationResponse = 
+                await ApiService.PostAsync<UserAuthorizationRequest, UserAuthorizationResponse>(
+                    Endpoint.UserAuthorization, 
+                    auth, 
+                    false
+                );
 
-            switch (authorizationResult)
+            switch (authorizationResponse.statusCode)
             {
-                case UserAuthorizationResult.Success:
+                case HttpStatusCode.OK:
+                    SessionService.SetToken(authorizationResponse.data.access_token);
+
                     menusManager.ShowSelectSceneMenu();
+
                     break;
-                case UserAuthorizationResult.InvalidCredentials:
+
+                case HttpStatusCode.Unauthorized:
                 authBtnText.text = "Войти";
                 authBtn.interactable = true;
                     BaseHelper.SetText(
                         passwordInputValidator.ErrorText, 
                         "Неправильный email или пароль"
                     );
+
                     break;
-                default:
+
+                case HttpStatusCode.RequestTimeout:
                     authBtnText.text = "Ошибка";
                     BaseHelper.SetText(
                         passwordInputValidator.ErrorText, 
                         "Проверьте подключение к интернету"
                     );
+
+                    break;
+
+                case HttpStatusCode.UnprocessableEntity:
+                    authBtnText.text = "Войти";
+                    authBtn.interactable = true;
+                    BaseHelper.SetText(
+                        passwordInputValidator.ErrorText, 
+                        "Проверьте корректность данных"
+                    );
+
+                    break;
+
+                default:
+                    authBtnText.text = "Ошибка";
+                    BaseHelper.SetText(
+                        passwordInputValidator.ErrorText, 
+                        "Ошибка"
+                    );
+
                     break;
             }
         }

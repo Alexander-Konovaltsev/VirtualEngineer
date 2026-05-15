@@ -5,6 +5,7 @@ using VirtualEngineer.Services;
 using VirtualEngineer.Enums;
 using System.Linq;
 using System.Threading.Tasks;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -71,7 +72,15 @@ namespace VirtualEngineer.Controllers
 
         private async Task GetSceneTests()
         {
-            quizzes = await ApiService.GetAsyncPrivate<Quiz>(Endpoint.QuizzesBySceneId((int)AppDataService.SelectedSceneId));
+            ApiResponse<Quiz[]> getQuizzesResponse = 
+                await ApiService.GetAsync<Quiz>(Endpoint.QuizzesBySceneId((int)AppDataService.SelectedSceneId));
+
+            if (!ResponseValidator.CheckResponseSuccess(getQuizzesResponse))
+            {
+                return;
+            }
+
+            quizzes = getQuizzesResponse.data;
 
             foreach (Quiz quiz in quizzes)
             {
@@ -84,7 +93,15 @@ namespace VirtualEngineer.Controllers
 
         private async Task GetUserResults()
         {
-            results = await ApiService.GetAsyncPrivate<Result>(Endpoint.ResultsByUser);
+            ApiResponse<Result[]> getResultsResponse = 
+                await ApiService.GetAsync<Result>(Endpoint.ResultsByUser);
+
+            if (!ResponseValidator.CheckResponseSuccess(getResultsResponse))
+            {
+                return;
+            }
+
+            results = getResultsResponse.data;
         }
         
         private Result[] GetUserResultsByQuiz(Quiz quiz)
@@ -97,9 +114,28 @@ namespace VirtualEngineer.Controllers
 
         private async Task<bool> CheckUserAllTestLearned()
         {
-            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
-            UserModelView[] userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>
-                               (Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId));
+            ApiResponse<UserModelView[]> getUserViewedModelsResponse = 
+                await ApiService.GetAsync<UserModelView>(
+                    Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getUserViewedModelsResponse))
+            {
+                return false;
+            }
+
+            ApiResponse<Model[]> getAllModelsResponse = 
+                await ApiService.GetAsync<Model>(
+                    Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getAllModelsResponse))
+            {
+                return false;
+            }
+
+            UserModelView[] userViewedModels = getUserViewedModelsResponse.data;
+            Model[] allModels = getAllModelsResponse.data;
 
             if (userViewedModels.Length < allModels.Count(m => m.is_informational))
                 return false;

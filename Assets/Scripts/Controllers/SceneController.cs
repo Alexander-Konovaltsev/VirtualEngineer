@@ -7,6 +7,7 @@ using VirtualEngineer.VR;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -24,9 +25,28 @@ namespace VirtualEngineer.Controllers
                 return;
             }
 
-            Model[] allModels = await ApiService.GetAsyncPrivate<Model>(Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId));
-            userViewedModels = await ApiService.GetAsyncPrivate<UserModelView>
-                                               (Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId));
+            ApiResponse<UserModelView[]> getUserViewedModelsResponse = 
+                await ApiService.GetAsync<UserModelView>(
+                    Endpoint.AllViewedModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getUserViewedModelsResponse))
+            {
+                return;
+            }
+            
+            ApiResponse<Model[]> getAllModelsResponse = 
+                await ApiService.GetAsync<Model>(
+                    Endpoint.AllModelsByScene((int)AppDataService.SelectedSceneId)
+                );
+            
+            if (!ResponseValidator.CheckResponseSuccess(getAllModelsResponse))
+            {
+                return;
+            }
+
+            userViewedModels = getUserViewedModelsResponse.data;
+            Model[] allModels = getAllModelsResponse.data;
 
             Dictionary<int?, List<Model>> tree = BuildModelsTree(allModels.ToList());
 

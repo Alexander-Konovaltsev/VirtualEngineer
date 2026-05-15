@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using UnityEngine.UI;
 using System.Text;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.Controllers
 {
@@ -84,7 +85,16 @@ namespace VirtualEngineer.Controllers
             testContainer.gameObject.SetActive(false);
             loadText.gameObject.SetActive(true);
             
-            Question[] questionsArr = await ApiService.GetAsyncPrivate<Question>(Endpoint.QuestionsByQuizId(quiz.id));
+            ApiResponse<Question[]> getQuestionsResponse = 
+                await ApiService.GetAsync<Question>(Endpoint.QuestionsByQuizId(quiz.id));
+
+            if (!ResponseValidator.CheckResponseSuccess(getQuestionsResponse))
+            {
+                return;
+            }
+
+            Question[] questionsArr = getQuestionsResponse.data;
+
             questions = questionsArr.ToList();
 
             loadText.gameObject.SetActive(false);
