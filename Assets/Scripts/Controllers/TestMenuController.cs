@@ -296,7 +296,7 @@ namespace VirtualEngineer.Controllers
             );
         }
 
-        private void FinishTest()
+        private async void FinishTest()
         {
             if (isFinished)
                 return;
@@ -309,6 +309,11 @@ namespace VirtualEngineer.Controllers
             }
 
             int percent = CalculateResultPercent();
+
+            if (!await CreateUserResult(percent))
+            {
+                return;
+            }
 
             FormResultText(percent);
         }
@@ -377,6 +382,30 @@ namespace VirtualEngineer.Controllers
 
             selectTestMenuController.Init(pauseMenuTransform);
             selectTestMenuTransform.gameObject.SetActive(true);
+        }
+
+        private async Task<bool> CreateUserResult(int percent)
+        {
+            ResultCreateRequest resultRequest = new ResultCreateRequest
+            {
+                percent = percent,
+                total_answers = userAnswers.Count,
+                correct_answers = correctCount,
+                quiz_id = quiz.id
+            };
+
+            ApiResponse<Result> resultResponse = 
+                await ApiService.PostAsync<ResultCreateRequest, Result>(
+                    Endpoint.CreateResult, 
+                    resultRequest
+                );
+
+            if (!ResponseValidator.CheckResponseSuccess(resultResponse))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

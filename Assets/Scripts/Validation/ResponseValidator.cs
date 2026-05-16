@@ -11,6 +11,7 @@ namespace VirtualEngineer.Validation
             if (!response.isSuccess)
             {
                 AppDataService.SelectedSceneId = null;
+                AppDataService.IsTestMode = false;
                 
                 SceneManager.LoadScene(ConstCode.StartMenuScene);
 

@@ -5,6 +5,7 @@ using VirtualEngineer.Enums;
 using UnityEngine.XR.Interaction.Toolkit;
 using VirtualEngineer.Models;
 using System.Threading.Tasks;
+using VirtualEngineer.Validation;
 
 namespace VirtualEngineer.VR
 {
@@ -24,12 +25,12 @@ namespace VirtualEngineer.VR
             cardController = card.GetComponent<InfoModelCardController>();
         }
 
-        public void OnSelect()
+        public async Task OnSelect()
         {
             if (card == null) return;
 
             if (!cardController.isViewed)
-                CreateModelView();
+                await CreateModelView();
 
             card.SetActive(!card.activeSelf);
         }
@@ -64,7 +65,7 @@ namespace VirtualEngineer.VR
             }
         }
 
-        private async void CreateModelView()
+        private async Task CreateModelView()
         { 
             UserModelViewCreateRequest userModelView = new UserModelViewCreateRequest
             {
@@ -72,18 +73,18 @@ namespace VirtualEngineer.VR
                 model_id=cardController.ModelId
             };
 
-            // UserModelViewCreateResult result = await ApiService.CreateUserModelView(userModelView);
-            // if (result == UserModelViewCreateResult.Success)
-            //     cardController.isViewed = true;
-
             ApiResponse<UserModelView> createUserModelViewResponse = 
                 await ApiService.PostAsync<UserModelViewCreateRequest, UserModelView>(
                     Endpoint.UserModelViewCreate, 
                     userModelView
                 );
 
-            if (createUserModelViewResponse.isSuccess)
-                cardController.isViewed = true;
+            if (!ResponseValidator.CheckResponseSuccess(createUserModelViewResponse))
+            {
+                return;
+            }
+
+            cardController.isViewed = true;
         }
     }
 }
