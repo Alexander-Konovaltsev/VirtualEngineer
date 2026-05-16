@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using VirtualEngineer.Models;
 using UnityEngine.UI;
-using System;
+using System.Linq;
 
 namespace VirtualEngineer.Controllers
 {
@@ -66,7 +66,9 @@ namespace VirtualEngineer.Controllers
                 return;
             }
 
-            result.text = $"Результат: {results[^1].percent}%";
+            int maxPercent = results.Max(r => r.percent);
+
+            result.text = $"Результат: {maxPercent}%";
         }
         
         private void CalcUserAttempts()

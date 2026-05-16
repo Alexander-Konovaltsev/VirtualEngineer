@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using VirtualEngineer.Validation;
+using System.Threading.Tasks;
 
 namespace VirtualEngineer.Controllers
 {
@@ -16,6 +17,8 @@ namespace VirtualEngineer.Controllers
         private TMP_Text title;
         [SerializeField]
         private TMP_Text descripiton;
+        [SerializeField]
+        private TMP_Text loadText;
         private Model[] allModels;
         private UserModelView[] userViewedModels;
         private Transform pauseMenuTransform;
@@ -25,14 +28,23 @@ namespace VirtualEngineer.Controllers
             title.text = "Прогресс";
         }
 
-        private void OnEnable()
+        private async void OnEnable()
         {
             ResizeMenu(transform);
 
             descripiton.text = "";
             gameObject.transform.SetPositionAndRotation(pauseMenuTransform.position, pauseMenuTransform.rotation);
 
-            LoadSceneStats();
+            loadText.gameObject.SetActive(true);
+
+            if (!await LoadSceneStats())
+            {
+                return;
+            }
+
+            loadText.gameObject.SetActive(false);
+
+            SetStatsText();
         }
 
         public void Init(Transform pauseMenuTransform)
@@ -40,7 +52,7 @@ namespace VirtualEngineer.Controllers
             this.pauseMenuTransform = pauseMenuTransform;
         }
 
-        private async void LoadSceneStats()
+        private async Task<bool> LoadSceneStats()
         {
             ApiResponse<UserModelView[]> getUserViewedModelsResponse = 
                 await ApiService.GetAsync<UserModelView>(
@@ -49,7 +61,7 @@ namespace VirtualEngineer.Controllers
             
             if (!ResponseValidator.CheckResponseSuccess(getUserViewedModelsResponse))
             {
-                return;
+                return false;
             }
 
             ApiResponse<Model[]> getAllModelsResponse = 
@@ -59,13 +71,13 @@ namespace VirtualEngineer.Controllers
             
             if (!ResponseValidator.CheckResponseSuccess(getAllModelsResponse))
             {
-                return;
+                return false;
             }
 
             userViewedModels = getUserViewedModelsResponse.data;
             allModels = getAllModelsResponse.data;
 
-            SetStatsText();
+            return true;
         }
 
         private void SetStatsText()
