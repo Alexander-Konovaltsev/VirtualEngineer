@@ -132,4 +132,6 @@ _Recovery/
 *.saves
 
 # OpenXR logs
-/openxr_*.log
+/openxr_*.log 
+
+*.lscache
