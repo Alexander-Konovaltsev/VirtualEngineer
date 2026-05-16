@@ -89,15 +89,6 @@ namespace VirtualEngineer.Controllers
 
                     break;
 
-                case HttpStatusCode.RequestTimeout:
-                    authBtnText.text = "Ошибка";
-                    BaseHelper.SetText(
-                        passwordInputValidator.ErrorText, 
-                        "Проверьте подключение к интернету"
-                    );
-
-                    break;
-
                 case HttpStatusCode.UnprocessableEntity:
                     authBtnText.text = "Войти";
                     authBtn.interactable = true;
@@ -112,7 +103,7 @@ namespace VirtualEngineer.Controllers
                     authBtnText.text = "Ошибка";
                     BaseHelper.SetText(
                         passwordInputValidator.ErrorText, 
-                        "Ошибка"
+                        "Проверьте подключение к интернету"
                     );
 
                     break;

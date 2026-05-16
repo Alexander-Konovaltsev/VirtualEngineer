@@ -18,6 +18,7 @@ namespace VirtualEngineer.Services
         )
         {
             using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(15);
 
             if (isProtected)
             {
@@ -47,7 +48,7 @@ namespace VirtualEngineer.Services
                     data = data
                 };
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 return new ApiResponse<T[]>
                 {
@@ -74,6 +75,7 @@ namespace VirtualEngineer.Services
         )
         {
             using var client = new HttpClient();
+            client.Timeout = TimeSpan.FromSeconds(15);
 
             if (isProtected)
             {
@@ -107,7 +109,7 @@ namespace VirtualEngineer.Services
                     data = result
                 };
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 return new ApiResponse<TResult>
                 {
