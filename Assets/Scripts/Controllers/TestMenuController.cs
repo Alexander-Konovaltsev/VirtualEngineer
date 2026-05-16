@@ -310,7 +310,16 @@ namespace VirtualEngineer.Controllers
 
             int percent = CalculateResultPercent();
 
-            if (!await CreateUserResult(percent))
+            Result result = await CreateResult(percent);
+
+            if (result == null)
+            {
+                return;
+            }
+
+            ResultDetail[] resultDetails = await CreateResultsDetails(result);
+
+            if (resultDetails == null)
             {
                 return;
             }
@@ -384,7 +393,7 @@ namespace VirtualEngineer.Controllers
             selectTestMenuTransform.gameObject.SetActive(true);
         }
 
-        private async Task<bool> CreateUserResult(int percent)
+        private async Task<Result> CreateResult(int percent)
         {
             ResultCreateRequest resultRequest = new ResultCreateRequest
             {
@@ -402,10 +411,42 @@ namespace VirtualEngineer.Controllers
 
             if (!ResponseValidator.CheckResponseSuccess(resultResponse))
             {
-                return false;
+                return null;
             }
 
-            return true;
+            return resultResponse.data;
+        }
+
+        private async Task<ResultDetail[]> CreateResultsDetails(Result result)
+        {
+            List<ResultDetailCreateRequest> resultDetails = new List<ResultDetailCreateRequest>();
+
+            foreach (UserAnswer userAnswer in userAnswers)
+            {
+                foreach (int answerId in userAnswer.selected_answer_ids)
+                {
+                    resultDetails.Add(new ResultDetailCreateRequest
+                    {
+                        created_at = userAnswer.created_at,
+                        result_id = result.id,
+                        question_id = userAnswer.question_id,
+                        answer_id = answerId
+                    });
+                }
+            }
+
+            ApiResponse<ResultDetail[]> resultDetailsResponse = 
+                await ApiService.PostAsync<List<ResultDetailCreateRequest>, ResultDetail[]>(
+                    Endpoint.CreateResultDetail, 
+                    resultDetails
+                );
+
+            if (!ResponseValidator.CheckResponseSuccess(resultDetailsResponse))
+            {
+                return null;
+            }
+
+            return resultDetailsResponse.data;
         }
     }
 }

@@ -33,5 +33,6 @@ namespace VirtualEngineer.Enums
             return $"/questions/{quizId}";
         }
         public const string CreateResult = "/results/create";
+        public const string CreateResultDetail = "/results-details/create";
     }
 }
