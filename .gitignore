@@ -122,9 +122,6 @@ _Recovery/
 /*.apk
 /*.aab
 
-# XRI Samples (если не модифицировал)
-/Assets/Samples/
-
 # Temporary VR files
 *.backup
 *.tmp
