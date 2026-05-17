@@ -10,7 +10,7 @@ namespace VirtualEngineer.Services
 {
     public class ApiService
     {
-        private const string BaseUrl = "http://127.0.0.1:8080";
+        private const string BaseUrl = "http://127.0.0.1:8080/api";
 
         public static async Task<ApiResponse<T[]>> GetAsync<T>(
             string endpoint, 
